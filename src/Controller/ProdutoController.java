@@ -24,9 +24,10 @@ public class ProdutoController {
 
     // --- Métodos de negócio ---
 
-    public void cadastrarProduto(String nome, int quantidade) {
+    public Produto cadastrarProduto(String nome, int quantidade) {
         Produto produto = new Produto(nome, quantidade);
         produtoRepository.adicionar(produto);
+        return produto;
     }
 
     public List<Produto> listarProdutos() {

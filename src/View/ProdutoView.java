@@ -12,19 +12,28 @@ import java.util.Scanner;
 public class ProdutoView {
 
     // MUDANÇA: Apenas declara o controller
+    // Autor : Cauã Tobias , Natan Lima
+
     private ProdutoController produtoController;
 
     // MUDANÇA: Apenas declara o scanner
+    // Autor : Cauã Tobias , Natan Lima
+
     private Scanner scanner;
 
     /**
      * MUDANÇA: Construtor de Injeção de Dependência.
      * Recebe o controller e o scanner único da Main.
      */
+    // Autor : Cauã Tobias , Natan Lima
+
     public ProdutoView(ProdutoController produtoController, Scanner scanner) {
         this.produtoController = produtoController;
         this.scanner = scanner;
     }
+
+    //Menu de exibição do Sistema WMS
+    // Autor : Cauã Tobias , Natan Lima
 
     public void exibirMenu() {
         int opcao = -1;
@@ -62,6 +71,8 @@ public class ProdutoView {
     }
 
     // O RESTO DA CLASSE NÃO MUDA
+    // Listar Produto
+    // Autor : Cauã Tobias , Natan Lima
 
     public void listarProdutos() {
         System.out.println("\n--- Lista de Produtos ---");
@@ -72,16 +83,25 @@ public class ProdutoView {
             produtos.forEach(System.out::println);
         }
     }
-
+     // Produto cadastro
+     // Autor : Cauã Tobias , Natan Lima
     private void cadastrarProduto() {
         System.out.println("\n--- Cadastro de Produto ---");
         System.out.print("Nome do produto: ");
         String nome = scanner.nextLine();
         System.out.print("Quantidade inicial: ");
         int quantidade = Integer.parseInt(scanner.nextLine());
-        produtoController.cadastrarProduto(nome, quantidade);
+
+        //Retorno do Produto cadastrado
+        // Autor : Cauã Tobias , Natan Lima
+
+        Produto produto = produtoController.cadastrarProduto(nome, quantidade);
+        System.out.println("Código do Produto: " + produto.getCodigo());
+        System.out.println("Nome do Produto: " + produto.getNome());
         System.out.println("Produto cadastrado com sucesso!");
     }
+      // Produto Atualizado
+      // Autor : Cauã Tobias , Natan Lima
 
     private void atualizarProduto() {
         System.out.print("ID do produto a ser atualizado: ");
@@ -94,12 +114,18 @@ public class ProdutoView {
         System.out.println("Produto atualizado!");
     }
 
+    // Remover Produto
+    // Autor : Cauã Tobias , Natan Lima
+
     private void removerProduto() {
         System.out.print("ID do produto a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
         produtoController.removerProduto(id);
         System.out.println("Produto removido!");
     }
+
+    // Definir localização no Estoque
+    // Autor : Cauã Tobias , Natan Lima
 
     private void definirLocalizacao() {
         System.out.println("\n--- Definir Localização de Produto ---");
@@ -118,6 +144,9 @@ public class ProdutoView {
             System.out.println("ERRO: Produto com ID " + id + " não encontrado.");
         }
     }
+
+    //Pesquisa de Produto por codigo
+    // Autor : Cauã Tobias , Natan Lima
 
     private void pesquisarPorCodigo() {
         System.out.println("\n--- Pesquisar Produto por Código ---");

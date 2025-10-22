@@ -1,9 +1,5 @@
-/* * Este é o arquivo principal (Main.java).
- * Sua única responsabilidade é "montar" o aplicativo.
- * Ele usa Injeção de Dependência para garantir que
- * todas as classes usem as MESMAS instâncias de
- * repositórios, controllers e do Scanner.
- */
+// Autor : Cauã Tobias , Natan Lima
+// Main = Arquivo principal de execução do sistema
 
 import View.ClienteView;
 import View.FornecedorView;
@@ -17,14 +13,18 @@ public class Main {
     public static void main(String[] args) {
 
         // --- PASSO 1: CRIAR O SCANNER ÚNICO ---
-        // Criamos UMA SÓ instância do Scanner que será
+        // Criamos uma só instância do Scanner que será
         // compartilhada por todas as classes 'View'.
         // Isso corrige o bug de travamento do menu.
+        // Autor : Cauã Tobias , Natan Lima
+
         Scanner scanner = new Scanner(System.in);
 
         // --- PASSO 2: CAMADA DE REPOSITÓRIO (Dados) ---
         // Criamos as instâncias dos repositórios.
         // Ao serem criados, eles automaticamente carregam os dados dos arquivos TXT.
+        // Autor : Cauã Tobias , Natan Lima
+
         System.out.println("Iniciando sistema... Carregando dados do TXT...");
 
         // O ProdutoRepository deve ser criado primeiro,
@@ -37,12 +37,16 @@ public class Main {
 
         // O PedidoRepository recebe o 'produtoRepo' em seu construtor
         // para "conectar" os produtos aos pedidos.
+        // Autor : Cauã Tobias , Natan Lima
+
         PedidoRepository pedidoRepo = new PedidoRepository(produtoRepo);
 
         System.out.println("Dados carregados. Iniciando serviços...");
 
         // --- PASSO 3: CAMADA DE CONTROLLER (Lógica) ---
         // Criamos os controllers e "injetamos" (passamos) os repositórios neles.
+        // Autor : Cauã Tobias , Natan Lima
+
         ProdutoController produtoController = new ProdutoController(produtoRepo);
         ClienteController clienteController = new ClienteController(clienteRepo);
         FornecedorController fornecedorController = new FornecedorController(fornecedorRepo);
@@ -52,6 +56,8 @@ public class Main {
 
         // --- PASSO 4: CAMADA DE VIEW (Interface) ---
         // Criamos as Views e "injetamos" os controllers E o scanner único.
+        // Autor : Cauã Tobias , Natan Lima
+
         ProdutoView produtoView = new ProdutoView(produtoController, scanner);
         ClienteView clienteView = new ClienteView(clienteController, scanner);
         FornecedorView fornecedorView = new FornecedorView(fornecedorController, scanner);
@@ -64,6 +70,8 @@ public class Main {
 
         // --- PASSO 5: MENU PRINCIPAL ---
         // O loop que roda o programa
+        // Autor : Cauã Tobias , Natan Lima
+
         int opcao = -1;
         while (opcao != 0) {
             System.out.println("\n--===[ WMS - Sistema de Gestão de Armazém ]===--");
