@@ -1,30 +1,35 @@
+/*
+ * View de Pedido (CORRIGIDA).
+ * Recebe o Controller, a ProdutoView e o Scanner via Injeção de Dependência.
+ */
 package View;
 
 import Controller.PedidoController;
 import Model.Pedido;
 import Model.Produto;
-import Repository.PedidoRepository;
-import Repository.ProdutoRepository;
+// Imports de Repository não são mais necessários aqui
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class PedidoView {
-    private PedidoController pedidoController;
-    private ProdutoView produtoView; // Para poder listar produtos para o usuário
-    private Scanner scanner = new Scanner(System.in);
 
-    public PedidoView() {
-        // O PedidoController precisa dos repositórios para funcionar
-        ProdutoRepository produtoRepository = new ProdutoRepository();
-        PedidoRepository pedidoRepository = new PedidoRepository();
-        this.pedidoController = new PedidoController(pedidoRepository, produtoRepository);
-        this.produtoView = new ProdutoView();
+    // MUDANÇA: Apenas declara
+    private PedidoController pedidoController;
+    private ProdutoView produtoView; // Referência para listar produtos
+    private Scanner scanner;
+
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * Recebe o controller, a view de produto (para listar)
+     * e o scanner único da Main.
+     */
+    public PedidoView(PedidoController pedidoController, ProdutoView produtoView, Scanner scanner) {
+        this.pedidoController = pedidoController;
+        this.produtoView = produtoView;
+        this.scanner = scanner;
     }
 
-    // =================================================================
-    // MÉTODO 'exibirMenu()' QUE ESTAVA FALTANDO
-    // =================================================================
     public void exibirMenu() {
         int opcao = -1;
         while (opcao != 0) {
@@ -37,6 +42,7 @@ public class PedidoView {
             System.out.print("Escolha uma opção: ");
 
             try {
+                // Usa o scanner compartilhado
                 opcao = Integer.parseInt(scanner.nextLine());
 
                 switch(opcao) {
@@ -56,18 +62,25 @@ public class PedidoView {
     private void criarPedido() {
         System.out.println("\n--- Criar Novo Pedido ---");
         System.out.println("Produtos disponíveis:");
-        produtoView.listarProdutos(); // Mostra os produtos para o usuário escolher
+
+        // MUDANÇA: Usa a instância de ProdutoView injetada
+        produtoView.listarProdutos();
 
         List<Integer> idsProdutos = new ArrayList<>();
         int idProduto;
 
         while (true) {
             System.out.print("Digite o ID de um produto para adicionar (ou 0 para finalizar): ");
-            idProduto = Integer.parseInt(scanner.nextLine());
-            if (idProduto == 0) {
-                break;
+            try {
+                idProduto = Integer.parseInt(scanner.nextLine());
+                if (idProduto == 0) {
+                    break;
+                }
+                idsProdutos.add(idProduto);
+                System.out.println("Produto ID " + idProduto + " adicionado. Digite outro ID ou 0.");
+            } catch (NumberFormatException e) {
+                System.out.println("ID inválido.");
             }
-            idsProdutos.add(idProduto);
         }
 
         if (!idsProdutos.isEmpty()) {
@@ -87,8 +100,12 @@ public class PedidoView {
             for (Pedido pedido : pedidos) {
                 System.out.println("Pedido ID: " + pedido.getId() + " | Status: " + pedido.getStatus() + " | Data: " + pedido.getData());
                 System.out.println("  Produtos no Pedido:");
-                for (Produto produto : pedido.getProdutos()) {
-                    System.out.println("    - ID: " + produto.getId() + ", Nome: " + produto.getNome());
+                if (pedido.getProdutos().isEmpty()) {
+                    System.out.println("    (Nenhum produto listado - pode ter sido removido)");
+                } else {
+                    for (Produto produto : pedido.getProdutos()) {
+                        System.out.println("    - ID: " + produto.getId() + ", Nome: " + produto.getNome());
+                    }
                 }
                 System.out.println("-------------------------");
             }

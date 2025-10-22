@@ -1,3 +1,7 @@
+/*
+ * Classe de modelo (Abstrata).
+ * Nenhuma alteração foi necessária aqui.
+ */
 package Model;
 
 public abstract class Pessoa {

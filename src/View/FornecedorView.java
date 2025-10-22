@@ -1,3 +1,7 @@
+/*
+ * View de Fornecedor (CORRIGIDA).
+ * Recebe o Controller e o Scanner via Injeção de Dependência.
+ */
 package View;
 
 import Controller.FornecedorController;
@@ -6,12 +10,24 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FornecedorView {
-    private FornecedorController fornecedorController = new FornecedorController();
-    private Scanner scanner = new Scanner(System.in);
 
-    // =================================================================
-    // MÉTODO 'exibirMenu()' QUE ESTAVA FALTANDO
-    // =================================================================
+    // MUDANÇA: Apenas declara o controller
+    private FornecedorController fornecedorController;
+
+    // MUDANÇA: Apenas declara o scanner
+    private Scanner scanner;
+
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * Recebe o controller e o scanner único da Main.
+     */
+    public FornecedorView(FornecedorController fornecedorController, Scanner scanner) {
+        this.fornecedorController = fornecedorController;
+        this.scanner = scanner;
+    }
+
+    // O RESTO DA CLASSE NÃO MUDA
+
     public void exibirMenu() {
         int opcao = -1;
         while(opcao != 0) {
@@ -24,6 +40,7 @@ public class FornecedorView {
             System.out.print("Escolha uma opção: ");
 
             try {
+                // Usa o scanner compartilhado
                 opcao = Integer.parseInt(scanner.nextLine());
 
                 switch(opcao) {

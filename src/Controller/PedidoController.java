@@ -1,3 +1,7 @@
+/*
+ * Controller de Pedido (CORRIGIDO).
+ * Recebe AMBOS os repositórios via Injeção de Dependência.
+ */
 package Controller;
 
 import Model.Pedido;
@@ -11,6 +15,11 @@ public class PedidoController {
     private PedidoRepository pedidoRepository;
     private ProdutoRepository produtoRepository;
 
+    /**
+     * Este construtor já estava correto.
+     * Recebe o PedidoRepo (para salvar pedidos) e o
+     * ProdutoRepo (para buscar produtos e verificar estoque).
+     */
     public PedidoController(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
@@ -18,17 +27,32 @@ public class PedidoController {
 
     // Criar pedido com lista de IDs de produtos
     public void criarPedido(List<Integer> idProdutos) {
-        Pedido pedido = new Pedido();
+        Pedido pedido = new Pedido(); // Cria um pedido novo
 
         for (int id : idProdutos) {
             Produto produto = produtoRepository.buscarPorId(id);
             if (produto != null) {
-                pedido.adicionarProduto(produto);
+                // NOVO: Verifica se há estoque
+                if(produto.getQuantidade() > 0) {
+                    produto.removerQuantidade(1); // Remove 1 do estoque
+                    pedido.adicionarProduto(produto); // Adiciona ao pedido
+
+                    // NOVO: Salva a mudança de estoque no "produtos.txt"
+                    produtoRepository.atualizar(produto);
+                } else {
+                    System.out.println("AVISO: Produto " + produto.getNome() + " está fora de estoque.");
+                }
+            } else {
+                System.out.println("AVISO: Produto com ID " + id + " não encontrado.");
             }
         }
 
-        // Salvar pedido no repositório
-        pedidoRepository.adicionar(pedido);
+        // Só salva o pedido se ele não estiver vazio
+        if (!pedido.getProdutos().isEmpty()) {
+            pedidoRepository.adicionar(pedido); // Salva no "pedidos.txt"
+        } else {
+            System.out.println("Pedido não foi criado (vazio ou sem estoque).");
+        }
     }
 
     // Listar todos pedidos
@@ -41,7 +65,7 @@ public class PedidoController {
         Pedido pedido = pedidoRepository.buscarPorId(idPedido);
         if (pedido != null) {
             pedido.setStatus(status);
-            pedidoRepository.atualizar(pedido);
+            pedidoRepository.atualizar(pedido); // Salva o novo status
         }
     }
 

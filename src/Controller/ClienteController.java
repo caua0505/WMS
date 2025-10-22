@@ -1,16 +1,29 @@
+/*
+ * Controller de Cliente (CORRIGIDO).
+ * Recebe o repositório via Injeção de Dependência.
+ */
 package Controller;
 
-import java.security.PublicKey;
 import java.util.List;
 import Model.Cliente;
 import Repository.ClienteRepository;
 
 public class ClienteController {
+
+    // MUDANÇA: Apenas declara o repositório
     private ClienteRepository clienteRepository;
 
-    public ClienteController() {
-        this.clienteRepository = new ClienteRepository();
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * O controller 'recebe' a instância do repositório criada na Main.
+     * @param clienteRepository A instância única do repositório.
+     */
+    public ClienteController(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
     }
+
+    // O RESTO DA CLASSE NÃO MUDA
+
     //CREATE
     public void cadastroCliente(Cliente cliente) {
         clienteRepository.adicionar(cliente);
@@ -27,7 +40,7 @@ public class ClienteController {
     public void removerCliente(int id) {
         clienteRepository.remover(id);
     }
-    //METODO DE NEGOCIO (opicionais)
+    //METODO DE NEGOCIO
     public Cliente buscarCliente(String nome) {
         return clienteRepository.buscarCliente(nome);
     }

@@ -1,3 +1,7 @@
+/*
+ * View de Cliente (CORRIGIDA).
+ * Recebe o Controller e o Scanner via Injeção de Dependência.
+ */
 package View;
 
 import Controller.ClienteController;
@@ -6,12 +10,25 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ClienteView {
-    private ClienteController clienteController = new ClienteController();
-    private Scanner scanner = new Scanner(System.in);
 
-    // =================================================================
-    // MÉTODO 'exibirMenu()' QUE ESTAVA FALTANDO
-    // =================================================================
+    // MUDANÇA: Apenas declara o controller
+    private ClienteController clienteController;
+
+    // MUDANÇA: Apenas declara o scanner
+    private Scanner scanner;
+
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * Recebe o controller e o scanner único da Main.
+     */
+    public ClienteView(ClienteController clienteController, Scanner scanner) {
+        this.clienteController = clienteController;
+        this.scanner = scanner;
+    }
+
+    // O RESTO DA CLASSE NÃO MUDA
+    // (Os métodos do menu agora usam as instâncias injetadas)
+
     public void exibirMenu() {
         int opcao = -1;
         while(opcao != 0) {
@@ -25,6 +42,7 @@ public class ClienteView {
             System.out.print("Escolha uma opção: ");
 
             try {
+                // Usa o scanner compartilhado
                 opcao = Integer.parseInt(scanner.nextLine());
 
                 switch(opcao) {

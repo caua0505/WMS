@@ -1,6 +1,12 @@
+/*
+ * Classe de modelo.
+ * Nenhuma alteração foi necessária aqui.
+ * Os getters e setters para 'posicao' e 'local'
+ * que você adicionou já estavam corretos.
+ */
 package Model;
 
-import View.Inter;
+import View.Inter; // Dependência da interface
 import java.util.Random;
 
 public class Produto implements Inter {
@@ -9,23 +15,20 @@ public class Produto implements Inter {
     private String nome;
     private int quantidade;
 
-    // =================================================================
-    // CAMPOS QUE ESTAVAM FALTANDO
-    // =================================================================
+    // Campos de localização
     private int posicao;
     private int local;
-    // =================================================================
 
     // Construtor principal
     public Produto(String nome, int quantidade) {
         this.codigo = gerarCodAleatorio();
         this.nome = nome;
         this.quantidade = quantidade;
-        this.posicao = 0; // Valor padrão para indicar "não localizado"
-        this.local = 0;   // Valor padrão para indicar "não localizado"
+        this.posicao = 0; // Valor padrão
+        this.local = 0;   // Valor padrão
     }
 
-    // Construtor usado para recriar objetos (ex: de um arquivo)
+    // Construtor usado para recriar objetos (ex: do arquivo)
     public Produto (String codigo, String nome, int quantidade){
         this.codigo = codigo;
         this.nome = nome;
@@ -45,25 +48,19 @@ public class Produto implements Inter {
     public String getCodigo() { return codigo; }
     public String getNome() { return nome; }
     public int getQuantidade() { return quantidade; }
-    public int getPosicao() { return posicao; } // <-- GETTER NECESSÁRIO
-    public int getLocal() { return local; }     // <-- GETTER NECESSÁRIO
+    public int getPosicao() { return posicao; }
+    public int getLocal() { return local; }
 
     // --- SETTERS ---
     public void setId(int id) { this.id = id; }
     public void setNome(String nome) { this.nome = nome; }
     public void setCodigo(String codigo) { this.codigo = codigo; }
-
-    // =================================================================
-    // MÉTODOS QUE ESTAVAM FALTANDO E CAUSARAM O ERRO
-    // =================================================================
     public void setPosicao(int posicao) {
         this.posicao = posicao;
     }
-
     public void setLocal(int local) {
         this.local = local;
     }
-    // =================================================================
 
     // Métodos de manipulação de estoque
     public void adicionarQuantidade(int qtd) {
@@ -88,7 +85,7 @@ public class Produto implements Inter {
     @Override
     public void listar() { System.out.println(this); }
 
-    // toString ATUALIZADO para exibir as novas informações
+    // toString ATUALIZADO
     @Override
     public String toString() {
         return String.format("ID: %d | Cod: %s | Produto: %s | QTD: %d | Posição: %d | Local: %d",

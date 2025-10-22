@@ -1,48 +1,66 @@
+/*
+ * Repositório de Fornecedores (CORRIGIDO).
+ * Responsável por gerenciar a lista de fornecedores.
+ */
 package Repository;
 
 import Model.Fornecedor;
-import java.util.ArrayList;
+import Model.GerenciadorArquivo; // Importa o gerenciador
 import java.util.List;
 
 public class FornecedorRepository {
-    // Lista para simular um banco de dados em memória para os fornecedores.
-    private static List<Fornecedor> fornecedores = new ArrayList<>();
+
+    // MUDANÇA: A lista não é mais 'static'
+    private List<Fornecedor> fornecedores;
+
+    // NOVO: Instância do gerenciador
+    private GerenciadorArquivo gerenciador;
+
+    // NOVO: Construtor que carrega dados do "fornecedores.txt"
+    public FornecedorRepository() {
+        // Aponta para o GerenciadorArquivo no pacote Model
+        this.gerenciador = new Model.GerenciadorArquivo();
+        this.fornecedores = gerenciador.carregarFornecedores();
+    }
 
     /**
-     * Adiciona um novo fornecedor à lista.
-     * Este é o método que estava faltando.
+     * Adiciona um novo fornecedor à lista e salva no arquivo.
      */
     public void adicionar(Fornecedor fornecedor) {
         fornecedores.add(fornecedor);
+        // NOVO: Salva a lista atualizada no arquivo
+        gerenciador.salvarFornecedores(fornecedores);
     }
 
     /**
      * Retorna la lista de todos os fornecedores cadastrados.
-     * (Chamado por 'listarFornecedores' no seu controller).
      */
     public List<Fornecedor> listar() {
         return fornecedores;
     }
 
     /**
-     * Atualiza um fornecedor existente na lista.
-     * (Chamado por 'atualizarFornecedor' no seu controller).
+     * Atualiza um fornecedor existente na lista e salva no arquivo.
      */
     public void atualizar(int id, Fornecedor fornecedorAtualizado) {
         for (int i = 0; i < fornecedores.size(); i++) {
             if (fornecedores.get(i).getId() == id) {
-                fornecedorAtualizado.setId(id); // Garante que o ID seja mantido
+                fornecedorAtualizado.setId(id);
                 fornecedores.set(i, fornecedorAtualizado);
-                return; // Encerra o método após a atualização.
+                // NOVO: Salva a lista atualizada no arquivo
+                gerenciador.salvarFornecedores(fornecedores);
+                return;
             }
         }
     }
 
     /**
-     * Remove um fornecedor da lista pelo seu ID.
-     * (Chamado por 'removerFornecedor' no seu controller).
+     * Remove um fornecedor da lista e salva no arquivo.
      */
     public void remover(int id) {
-        fornecedores.removeIf(fornecedor -> fornecedor.getId() == id);
+        if (fornecedores.removeIf(fornecedor -> fornecedor.getId() == id)) {
+            // NOVO: Salva a lista atualizada no arquivo
+            gerenciador.salvarFornecedores(fornecedores);
+        }
     }
 }

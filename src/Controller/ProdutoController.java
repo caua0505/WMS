@@ -1,3 +1,7 @@
+/*
+ * Controller de Produto (CORRIGIDO).
+ * Recebe o repositório via Injeção de Dependência.
+ */
 package Controller;
 
 import Model.Produto;
@@ -6,13 +10,20 @@ import java.util.List;
 
 public class ProdutoController {
 
+    // MUDANÇA: Apenas declara o repositório
     private ProdutoRepository produtoRepository;
 
-    public ProdutoController() {
-        this.produtoRepository = new ProdutoRepository();
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * Recebe a instância única do repositório criada na Main.
+     * @param produtoRepository A instância única do repositório.
+     */
+    public ProdutoController(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
     }
 
-    // --- Seus métodos existentes ---
+    // --- Métodos de negócio ---
+
     public void cadastrarProduto(String nome, int quantidade) {
         Produto produto = new Produto(nome, quantidade);
         produtoRepository.adicionar(produto);
@@ -32,6 +43,7 @@ public class ProdutoController {
             } else if (diferenca < 0) {
                 produtoParaAtualizar.removerQuantidade(-diferenca);
             }
+            // NOVO: Chama 'atualizar' para salvar a mudança no TXT
             produtoRepository.atualizar(produtoParaAtualizar);
         }
     }
@@ -40,36 +52,19 @@ public class ProdutoController {
         produtoRepository.remover(id);
     }
 
-    // ========================================================================
-    // MÉTODO 'definirLocalizacao' QUE ESTAVA FALTANDO
-    // ========================================================================
-    /**
-     * Busca um produto pelo seu ID e define sua posição e local.
-     * @param id O ID do produto a ser localizado.
-     * @param posicao A posição do produto.
-     * @param local O local do produto.
-     * @return true se o produto foi encontrado e atualizado, false caso contrário.
-     */
     public boolean definirLocalizacao(int id, int posicao, int local) {
         Produto produtoParaLocalizar = produtoRepository.buscarPorId(id);
 
         if (produtoParaLocalizar != null) {
             produtoParaLocalizar.setPosicao(posicao);
             produtoParaLocalizar.setLocal(local);
-            produtoRepository.atualizar(produtoParaLocalizar); // Salva a alteração
+            // NOVO: Salva a alteração de localização no TXT
+            produtoRepository.atualizar(produtoParaLocalizar);
             return true;
         }
         return false;
     }
 
-    // ========================================================================
-    // MÉTODO 'buscarProdutoPorCodigo' QUE ESTAVA FALTANDO
-    // ========================================================================
-    /**
-     * Busca um produto pelo seu código alfanumérico.
-     * @param codigo O código gerado aleatoriamente (ex: "123432").
-     * @return O objeto Produto se encontrado, caso contrário, retorna null.
-     */
     public Produto buscarProdutoPorCodigo(String codigo) {
         List<Produto> todosProdutos = produtoRepository.listarTodos();
         for (Produto produto : todosProdutos) {

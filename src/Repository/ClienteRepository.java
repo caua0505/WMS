@@ -1,62 +1,80 @@
+/*
+ * Repositório de Clientes (CORRIGIDO).
+ * Responsável por gerenciar a lista de clientes.
+ */
 package Repository;
 
 import Model.Cliente;
-import java.util.ArrayList;
+import Model.GerenciadorArquivo; // Importa o gerenciador
 import java.util.List;
 
 public class ClienteRepository {
-    // Lista para simular um banco de dados em memória para os clientes.
-    private static List<Cliente> clientes = new ArrayList<>();
+
+    // MUDANÇA: A lista não é mais 'static'
+    private List<Cliente> clientes;
+
+    // NOVO: Instância do gerenciador de arquivos
+    private GerenciadorArquivo gerenciador;
+
+    // NOVO: Construtor
+    public ClienteRepository() {
+        // Aponta para o GerenciadorArquivo no pacote Model
+        this.gerenciador = new Model.GerenciadorArquivo();
+
+        // MUDANÇA: A lista é preenchida com os dados do "clientes.txt"
+        this.clientes = gerenciador.carregarClientes();
+    }
 
     /**
-     * Adiciona um novo cliente à lista.
-     * Este é o método que estava faltando.
+     * Adiciona um novo cliente à lista e salva no arquivo.
      */
     public void adicionar(Cliente cliente) {
         clientes.add(cliente);
+        // NOVO: Salva a lista inteira no TXT
+        gerenciador.salvarClientes(clientes);
     }
 
     /**
      * Retorna a lista de todos os clientes cadastrados.
-     * (Chamado por 'listarCliente' no seu controller).
      */
     public List<Cliente> listar() {
         return clientes;
     }
 
     /**
-     * Atualiza um cliente existente na lista.
-     * (Chamado por 'atualizarCliente' no seu controller. Note o nome 'atulizar').
+     * Atualiza um cliente existente e salva no arquivo.
      */
     public void atulizar(int id, Cliente clienteAtualizado) {
         for (int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getId() == id) {
-                clienteAtualizado.setId(id); // Garante que o ID seja mantido
+                clienteAtualizado.setId(id);
                 clientes.set(i, clienteAtualizado);
-                return; // Encerra o método após encontrar e atualizar.
+                // NOVO: Salva a lista inteira no TXT
+                gerenciador.salvarClientes(clientes);
+                return;
             }
         }
     }
 
     /**
-     * Remove um cliente da lista pelo seu ID.
-     * (Chamado por 'removerCliente' no seu controller).
+     * Remove um cliente da lista e salva no arquivo.
      */
     public void remover(int id) {
-        clientes.removeIf(cliente -> cliente.getId() == id);
+        if (clientes.removeIf(cliente -> cliente.getId() == id)) {
+            // NOVO: Salva a lista inteira no TXT
+            gerenciador.salvarClientes(clientes);
+        }
     }
 
     /**
      * Busca um cliente pelo nome.
-     * (Chamado por 'buscarCliente' no seu controller).
      */
     public Cliente buscarCliente(String nome) {
         for (Cliente cliente : clientes) {
-            // Compara os nomes ignorando maiúsculas/minúsculas.
             if (cliente.getNome().equalsIgnoreCase(nome)) {
                 return cliente;
             }
         }
-        return null; // Retorna nulo se nenhum cliente for encontrado com esse nome.
+        return null;
     }
 }

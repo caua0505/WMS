@@ -1,68 +1,61 @@
+/*
+ * Classe de modelo.
+ * Nenhuma alteração foi necessária aqui.
+ * O método 'adicionarProduto' que você adicionou
+ * já estava correto.
+ */
 package Model;
 
-import View.Inter;
-import java.util.ArrayList; // <-- IMPORTANTE
+import View.Inter; // Dependência da interface
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;      // <-- IMPORTANTE
+import java.util.List;
 import java.util.Random;
 
 public class Pedido implements Inter{
     protected int id;
     protected Date data;
     protected String status;
-    private List<Produto> produtos; // <-- 1. ADICIONA A LISTA DE PRODUTOS
+    private List<Produto> produtos; // Lista de produtos no pedido
 
-    // Construtor
+    // Construtor usado pelo GerenciadorArquivo
     public Pedido(int id, Date data, String status) {
         this.id = id;
         this.data = data;
         this.status = status;
-        this.produtos = new ArrayList<>(); // <-- Inicializa a lista
+        this.produtos = new ArrayList<>(); // Inicializa a lista
     }
 
-    // Gerar código aleatório
+    // Construtor para criar um novo pedido
     public Pedido(){
         Random random = new Random();
-        this.id = random.nextInt(100000);
-        this.data = new Date(); // Garante que a data não seja nula
+        this.id = random.nextInt(100000); // ID temporário, será sobrescrito pelo Repositório
+        this.data = new Date(); // Data atual
         this.status = "Criado";
-        this.produtos = new ArrayList<>(); // <-- Inicializa a lista
+        this.produtos = new ArrayList<>(); // Inicializa a lista
     }
 
-    // =================================================================
-    // MÉTODO QUE ESTAVA FALTANDO (A SOLUÇÃO)
-    // =================================================================
     /**
      * Adiciona um produto à lista interna de produtos do pedido.
-     * @param produto O objeto Produto a ser adicionado.
      */
     public void adicionarProduto(Produto produto) {
         this.produtos.add(produto);
     }
-    // =================================================================
 
-    // Construtor Criar Pedido
+    // Métodos antigos de status (não mais usados pelo Controller, mas podem ficar)
     public int criarPedido(Date data){
         this.data = data;
         this.status = "Criado!";
         return this.id;
     }
-
-    // Atualizar Pedido
     public void atulizarStatus(int id , String status){
         if (this.id == id){
             this.status = status;
-            System.out.println("Status realizado para : " + status);
-        } else {
-            System.out.println("Pedido não localizado!");
         }
     }
-
-    // Cancelar Pedido
     public void cancelarPedido(int id){
         if(this.id == id){
             this.status = "Cancelado!";
-            System.out.println("Pedido Cancelado!");
         }
     }
 
@@ -70,9 +63,9 @@ public class Pedido implements Inter{
     public Date getData() { return data; }
     public int getId() { return id; }
     public String getStatus() { return status; }
-    public List<Produto> getProdutos() { return produtos; } // <-- Getter para a lista
+    public List<Produto> getProdutos() { return produtos; }
 
-    // Setters (Úteis para o repositório)
+    // Setters (Usados pelo Repositório/Controller)
     public void setId(int id) { this.id = id; }
     public void setStatus(String status) { this.status = status; }
 

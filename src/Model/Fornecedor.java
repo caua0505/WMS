@@ -1,7 +1,10 @@
+/*
+ * Classe de modelo.
+ * Nenhuma alteração foi necessária aqui.
+ */
 package Model;
 
-import Model.Pessoa;
-import View.Inter;
+import View.Inter; // Dependência da interface
 
 public class Fornecedor extends Pessoa implements Inter{
     private String cnpj;
@@ -18,7 +21,6 @@ public class Fornecedor extends Pessoa implements Inter{
     }
 
     // Metodo Interface
-
     @Override
     public void criar() {
         System.out.println("Criando fornecedor!");

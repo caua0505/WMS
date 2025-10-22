@@ -1,7 +1,10 @@
+/*
+ * Classe de modelo.
+ * Nenhuma alteração foi necessária aqui.
+ */
 package Model;
 
-import Model.Pessoa;
-import View.Inter;
+import View.Inter; // Dependência da interface
 
 public class Cliente extends Pessoa implements Inter{
     private String endereco;
@@ -40,6 +43,6 @@ public class Cliente extends Pessoa implements Inter{
 
     @Override
     public String toString() {
-            return id + "-" + nome + "-" + endereco;
+        return id + "-" + nome + "-" + endereco;
     }
 }

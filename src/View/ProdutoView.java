@@ -1,3 +1,7 @@
+/*
+ * View de Produto (CORRIGIDA).
+ * Recebe o Controller e o Scanner via Injeção de Dependência.
+ */
 package View;
 
 import Controller.ProdutoController;
@@ -6,12 +10,26 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ProdutoView {
-    private ProdutoController produtoController = new ProdutoController();
-    private Scanner scanner = new Scanner(System.in);
+
+    // MUDANÇA: Apenas declara o controller
+    private ProdutoController produtoController;
+
+    // MUDANÇA: Apenas declara o scanner
+    private Scanner scanner;
+
+    /**
+     * MUDANÇA: Construtor de Injeção de Dependência.
+     * Recebe o controller e o scanner único da Main.
+     */
+    public ProdutoView(ProdutoController produtoController, Scanner scanner) {
+        this.produtoController = produtoController;
+        this.scanner = scanner;
+    }
 
     public void exibirMenu() {
         int opcao = -1;
         while (opcao != 0) {
+            // Este menu estava travando antes da correção do Scanner
             System.out.println("\n---===[ Gestão de Produtos ]===---");
             System.out.println("1. Cadastrar Produto");
             System.out.println("2. Listar Todos os Produtos");
@@ -25,6 +43,7 @@ public class ProdutoView {
             System.out.print("Escolha uma opção: ");
 
             try {
+                // Usa o scanner compartilhado
                 opcao = Integer.parseInt(scanner.nextLine());
                 switch (opcao) {
                     case 1: cadastrarProduto(); break;
@@ -42,9 +61,8 @@ public class ProdutoView {
         }
     }
 
-    // =================================================================
-    // A CORREÇÃO ESTÁ AQUI: O MÉTODO AGORA É 'public'
-    // =================================================================
+    // O RESTO DA CLASSE NÃO MUDA
+
     public void listarProdutos() {
         System.out.println("\n--- Lista de Produtos ---");
         List<Produto> produtos = produtoController.listarProdutos();

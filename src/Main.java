@@ -1,14 +1,70 @@
+/* * Este é o arquivo principal (Main.java).
+ * Sua única responsabilidade é "montar" o aplicativo.
+ * Ele usa Injeção de Dependência para garantir que
+ * todas as classes usem as MESMAS instâncias de
+ * repositórios, controllers e do Scanner.
+ */
+
 import View.ClienteView;
 import View.FornecedorView;
 import View.PedidoView;
 import View.ProdutoView;
 import java.util.Scanner;
+import Controller.*;
+import Repository.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int opcao = -1;
 
+        // --- PASSO 1: CRIAR O SCANNER ÚNICO ---
+        // Criamos UMA SÓ instância do Scanner que será
+        // compartilhada por todas as classes 'View'.
+        // Isso corrige o bug de travamento do menu.
+        Scanner scanner = new Scanner(System.in);
+
+        // --- PASSO 2: CAMADA DE REPOSITÓRIO (Dados) ---
+        // Criamos as instâncias dos repositórios.
+        // Ao serem criados, eles automaticamente carregam os dados dos arquivos TXT.
+        System.out.println("Iniciando sistema... Carregando dados do TXT...");
+
+        // O ProdutoRepository deve ser criado primeiro,
+        // pois o PedidoRepository depende dele.
+        ProdutoRepository produtoRepo = new ProdutoRepository();
+
+        // Repositórios independentes
+        ClienteRepository clienteRepo = new ClienteRepository();
+        FornecedorRepository fornecedorRepo = new FornecedorRepository();
+
+        // O PedidoRepository recebe o 'produtoRepo' em seu construtor
+        // para "conectar" os produtos aos pedidos.
+        PedidoRepository pedidoRepo = new PedidoRepository(produtoRepo);
+
+        System.out.println("Dados carregados. Iniciando serviços...");
+
+        // --- PASSO 3: CAMADA DE CONTROLLER (Lógica) ---
+        // Criamos os controllers e "injetamos" (passamos) os repositórios neles.
+        ProdutoController produtoController = new ProdutoController(produtoRepo);
+        ClienteController clienteController = new ClienteController(clienteRepo);
+        FornecedorController fornecedorController = new FornecedorController(fornecedorRepo);
+        PedidoController pedidoController = new PedidoController(pedidoRepo, produtoRepo);
+
+        System.out.println("Serviços iniciados. Iniciando interface...");
+
+        // --- PASSO 4: CAMADA DE VIEW (Interface) ---
+        // Criamos as Views e "injetamos" os controllers E o scanner único.
+        ProdutoView produtoView = new ProdutoView(produtoController, scanner);
+        ClienteView clienteView = new ClienteView(clienteController, scanner);
+        FornecedorView fornecedorView = new FornecedorView(fornecedorController, scanner);
+
+        // A PedidoView precisa do seu controller, da ProdutoView (para listar)
+        // e do scanner.
+        PedidoView pedidoView = new PedidoView(pedidoController, produtoView, scanner);
+
+        System.out.println("Sistema pronto!");
+
+        // --- PASSO 5: MENU PRINCIPAL ---
+        // O loop que roda o programa
+        int opcao = -1;
         while (opcao != 0) {
             System.out.println("\n--===[ WMS - Sistema de Gestão de Armazém ]===--");
             System.out.println("1. Gestão de Produtos");
@@ -19,25 +75,18 @@ public class Main {
             System.out.print("Escolha um módulo para gerenciar: ");
 
             try {
-                // Lê a linha inteira para evitar problemas com o scanner
+                // Usamos o scanner principal
                 opcao = Integer.parseInt(scanner.nextLine());
 
+                // MUDANÇA: Agora chamamos os métodos nas instâncias
+                // 'produtoView', 'clienteView', etc., em vez de criar novas.
                 switch (opcao) {
-                    case 1:
-                        // Chama a nova ProdutoView que tem os métodos de localização
-                        new ProdutoView().exibirMenu();
-                        break;
-                    case 2:
-                        new ClienteView().exibirMenu();
-                        break;
-                    case 3:
-                        new FornecedorView().exibirMenu();
-                        break;
-                    case 4:
-                        new PedidoView().exibirMenu();
-                        break;
+                    case 1: produtoView.exibirMenu(); break;
+                    case 2: clienteView.exibirMenu(); break;
+                    case 3: fornecedorView.exibirMenu(); break;
+                    case 4: pedidoView.exibirMenu(); break;
                     case 0:
-                        System.out.println("Encerrando o sistema...");
+                        System.out.println("Encerrando o sistema... Dados salvos.");
                         break;
                     default:
                         System.out.println("Opção inválida.");
@@ -46,6 +95,9 @@ public class Main {
                 System.out.println("Erro: Entrada inválida. Por favor, digite um número.");
             }
         }
+
+        // --- PASSO 6: FECHAR O SCANNER ---
+        // Fechamos o scanner SÓ AQUI, no final do programa.
         scanner.close();
     }
 }
