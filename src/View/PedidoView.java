@@ -1,28 +1,27 @@
 /*
- * View de Pedido (CORRIGIDA).
- * Recebe o Controller, a ProdutoView e o Scanner via Injeção de Dependência.
+ * View de Pedido.
+ * "COMMIT": Esta View é especial pois recebe 3 dependências:
+ * 1. PedidoController (para criar/listar pedidos)
+ * 2. ProdutoView (para mostrar a lista de produtos disponíveis)
+ * 3. Scanner (para ler a entrada)
  */
 package View;
 
 import Controller.PedidoController;
 import Model.Pedido;
 import Model.Produto;
-// Imports de Repository não são mais necessários aqui
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class PedidoView {
 
-    // MUDANÇA: Apenas declara
     private PedidoController pedidoController;
     private ProdutoView produtoView; // Referência para listar produtos
     private Scanner scanner;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * Recebe o controller, a view de produto (para listar)
-     * e o scanner único da Main.
+     * Construtor de Injeção de Dependência.
      */
     public PedidoView(PedidoController pedidoController, ProdutoView produtoView, Scanner scanner) {
         this.pedidoController = pedidoController;
@@ -59,11 +58,13 @@ public class PedidoView {
         }
     }
 
+    // --- Métodos privados que chamam o Controller ---
+
     private void criarPedido() {
         System.out.println("\n--- Criar Novo Pedido ---");
         System.out.println("Produtos disponíveis:");
 
-        // MUDANÇA: Usa a instância de ProdutoView injetada
+        // "COMMIT": Reutiliza a ProdutoView para mostrar os produtos
         produtoView.listarProdutos();
 
         List<Integer> idsProdutos = new ArrayList<>();
@@ -84,6 +85,7 @@ public class PedidoView {
         }
 
         if (!idsProdutos.isEmpty()) {
+            // Envia a lista de IDs para o controller
             pedidoController.criarPedido(idsProdutos);
             System.out.println("Pedido criado com sucesso!");
         } else {
@@ -97,11 +99,13 @@ public class PedidoView {
         if (pedidos.isEmpty()) {
             System.out.println("Nenhum pedido realizado.");
         } else {
+            // Loop para mostrar detalhes do pedido e seus produtos
             for (Pedido pedido : pedidos) {
-                System.out.println("Pedido ID: " + pedido.getId() + " | Status: " + pedido.getStatus() + " | Data: " + pedido.getData());
+                // Usa o toString() modificado do Pedido (com o 'numeroPedido')
+                System.out.println(pedido);
                 System.out.println("  Produtos no Pedido:");
                 if (pedido.getProdutos().isEmpty()) {
-                    System.out.println("    (Nenhum produto listado - pode ter sido removido)");
+                    System.out.println("    (Nenhum produto listado)");
                 } else {
                     for (Produto produto : pedido.getProdutos()) {
                         System.out.println("    - ID: " + produto.getId() + ", Nome: " + produto.getNome());
@@ -116,8 +120,9 @@ public class PedidoView {
         System.out.println("\n--- Atualizar Status do Pedido ---");
         System.out.print("ID do pedido para atualizar o status: ");
         int id = Integer.parseInt(scanner.nextLine());
-        System.out.print("Novo status: ");
+        System.out.print("Novo status (Ex: Enviado, Entregue, Cancelado): ");
         String status = scanner.nextLine();
+        // Chama o controller
         pedidoController.atualizarStatus(id, status);
         System.out.println("Status atualizado com sucesso!");
     }
@@ -126,6 +131,7 @@ public class PedidoView {
         System.out.println("\n--- Remover Pedido ---");
         System.out.print("ID do pedido a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
+        // Chama o controller
         pedidoController.removerPedido(id);
         System.out.println("Pedido removido com sucesso!");
     }

@@ -1,5 +1,5 @@
 /*
- * Controller de Fornecedor (CORRIGIDO).
+ * Controller de Fornecedor.
  * Recebe o repositório via Injeção de Dependência.
  */
 package Controller;
@@ -10,19 +10,16 @@ import Repository.FornecedorRepository;
 
 public class FornecedorController {
 
-    // MUDANÇA: Apenas declara o repositório
     private FornecedorRepository fornecedorRepository;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * Recebe a instância única do repositório criada na Main.
-     * @param fornecedorRepository A instância única do repositório.
+     * Construtor de Injeção de Dependência.
      */
     public FornecedorController(FornecedorRepository fornecedorRepository) {
         this.fornecedorRepository = fornecedorRepository;
     }
 
-    // O RESTO DA CLASSE NÃO MUDA
+    // --- Métodos que delegam para o Repositório ---
 
     public void cadastrarFornecedor(Fornecedor fornecedor) {
         fornecedorRepository.adicionar(fornecedor);

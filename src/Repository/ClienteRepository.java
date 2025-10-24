@@ -1,27 +1,24 @@
 /*
- * Repositório de Clientes (CORRIGIDO).
- * Responsável por gerenciar a lista de clientes.
+ * Repositório de Clientes.
+ * Mesma lógica do ProdutoRepository.
  */
 package Repository;
 
 import Model.Cliente;
-import Model.GerenciadorArquivo; // Importa o gerenciador
+import Model.GerenciadorArquivo;
 import java.util.List;
 
 public class ClienteRepository {
 
-    // MUDANÇA: A lista não é mais 'static'
-    private List<Cliente> clientes;
-
-    // NOVO: Instância do gerenciador de arquivos
+    private List<Cliente> clientes; // Lista em memória
     private GerenciadorArquivo gerenciador;
 
-    // NOVO: Construtor
+    /**
+     * Construtor.
+     * Carrega os clientes do "clientes.txt" ao iniciar.
+     */
     public ClienteRepository() {
-        // Aponta para o GerenciadorArquivo no pacote Model
         this.gerenciador = new Model.GerenciadorArquivo();
-
-        // MUDANÇA: A lista é preenchida com os dados do "clientes.txt"
         this.clientes = gerenciador.carregarClientes();
     }
 
@@ -29,16 +26,10 @@ public class ClienteRepository {
      * Adiciona um novo cliente à lista e salva no arquivo.
      */
     public void adicionar(Cliente cliente) {
-        clientes.add(cliente);
-        // NOVO: Salva a lista inteira no TXT
-        gerenciador.salvarClientes(clientes);
-    }
+        clientes.add(cliente); // Adiciona na memória
 
-    /**
-     * Retorna a lista de todos os clientes cadastrados.
-     */
-    public List<Cliente> listar() {
-        return clientes;
+        // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+        gerenciador.salvarClientes(clientes); // Salva no TXT
     }
 
     /**
@@ -48,9 +39,10 @@ public class ClienteRepository {
         for (int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getId() == id) {
                 clienteAtualizado.setId(id);
-                clientes.set(i, clienteAtualizado);
-                // NOVO: Salva a lista inteira no TXT
-                gerenciador.salvarClientes(clientes);
+                clientes.set(i, clienteAtualizado); // Atualiza na memória
+
+                // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+                gerenciador.salvarClientes(clientes); // Salva no TXT
                 return;
             }
         }
@@ -60,15 +52,18 @@ public class ClienteRepository {
      * Remove um cliente da lista e salva no arquivo.
      */
     public void remover(int id) {
-        if (clientes.removeIf(cliente -> cliente.getId() == id)) {
-            // NOVO: Salva a lista inteira no TXT
-            gerenciador.salvarClientes(clientes);
+        if (clientes.removeIf(cliente -> cliente.getId() == id)) { // Remove da memória
+            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+            gerenciador.salvarClientes(clientes); // Salva no TXT
         }
     }
 
-    /**
-     * Busca um cliente pelo nome.
-     */
+    // --- Métodos de Leitura ---
+
+    public List<Cliente> listar() {
+        return clientes;
+    }
+
     public Cliente buscarCliente(String nome) {
         for (Cliente cliente : clientes) {
             if (cliente.getNome().equalsIgnoreCase(nome)) {

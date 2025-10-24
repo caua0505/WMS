@@ -1,41 +1,40 @@
 /*
- * Repositório de Pedidos (CORRIGIDO).
- * Responsável por gerenciar a lista de pedidos.
+ * Repositório de Pedidos.
+ * Lógica semelhante ao ProdutoRepository.
+ *
+ * "COMMIT": Este repositório é especial pois DEPENDE de outro repositório
+ * (ProdutoRepository) para funcionar.
  */
 package Repository;
 
 import Model.Pedido;
-import Model.GerenciadorArquivo; // Importa o gerenciador
+import Model.GerenciadorArquivo;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PedidoRepository {
 
-    // MUDANÇA: A lista não é mais 'static'
-    private List<Pedido> pedidos;
-
-    // NOVO: Instância do gerenciador
+    private List<Pedido> pedidos; // Lista em memória
     private GerenciadorArquivo gerenciador;
-
-    // Gerador de ID único
     private static AtomicInteger proximoId;
 
     /**
-     * MUDANÇA IMPORTANTE: Construtor do PedidoRepository
-     * Agora ele RECEBE o ProdutoRepository (Injeção de Dependência).
-     * @param produtoRepository A instância já carregada do repo de produtos.
+     * MUDANÇA IMPORTANTE: Construtor do PedidoRepository.
+     * Recebe o ProdutoRepository por Injeção de Dependência.
+     *
+     * @param produtoRepository A instância JÁ CARREGADA do repo de produtos.
+     * É necessária para o 'carregarPedidos'
+     * "reconectar" os produtos aos pedidos.
      */
     public PedidoRepository(ProdutoRepository produtoRepository) {
-        // Aponta para o GerenciadorArquivo no pacote Model
         this.gerenciador = new Model.GerenciadorArquivo();
 
-        // MUDANÇA: Passamos o 'produtoRepository' para o 'carregarPedidos'
-        // para que ele possa reconectar os produtos aos pedidos.
+        // Passamos o 'produtoRepository' para o 'carregarPedidos'
         this.pedidos = gerenciador.carregarPedidos(produtoRepository);
 
         // Lógica para encontrar o maior ID salvo
         int maxId = 0;
-        for(Pedido p : pedidos) {
+        for (Pedido p : pedidos) {
             if (p.getId() > maxId) {
                 maxId = p.getId();
             }
@@ -47,11 +46,39 @@ public class PedidoRepository {
      * Adiciona um pedido, define um ID único e salva no arquivo.
      */
     public void adicionar(Pedido pedido) {
-        pedido.setId(proximoId.getAndIncrement());
-        pedidos.add(pedido);
-        // NOVO: Salva a lista atualizada no arquivo
-        gerenciador.salvarPedidos(pedidos);
+        pedido.setId(proximoId.getAndIncrement()); // Define o ID sequencial
+        pedidos.add(pedido); // Adiciona na memória
+
+        // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+        gerenciador.salvarPedidos(pedidos); // Salva no TXT
     }
+
+    /**
+     * Atualiza um pedido na lista e salva no arquivo.
+     * (Usado para mudar o Status, por exemplo)
+     */
+    public void atualizar(Pedido pedidoAtualizado) {
+        Pedido pedidoExistente = buscarPorId(pedidoAtualizado.getId());
+        if (pedidoExistente != null) {
+            int index = pedidos.indexOf(pedidoExistente);
+            pedidos.set(index, pedidoAtualizado); // Atualiza na memória
+
+            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+            gerenciador.salvarPedidos(pedidos); // Salva no TXT
+        }
+    }
+
+    /**
+     * Remove um pedido da lista e salva no arquivo.
+     */
+    public void remover(int id) {
+        if (pedidos.removeIf(pedido -> pedido.getId() == id)) { // Remove da memória
+            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+            gerenciador.salvarPedidos(pedidos); // Salva no TXT
+        }
+    }
+
+    // --- Métodos de Leitura ---
 
     public List<Pedido> listarTodos() {
         return pedidos;
@@ -64,28 +91,5 @@ public class PedidoRepository {
             }
         }
         return null;
-    }
-
-    /**
-     * Atualiza um pedido na lista e salva no arquivo.
-     */
-    public void atualizar(Pedido pedidoAtualizado) {
-        Pedido pedidoExistente = buscarPorId(pedidoAtualizado.getId());
-        if (pedidoExistente != null) {
-            int index = pedidos.indexOf(pedidoExistente);
-            pedidos.set(index, pedidoAtualizado);
-            // NOVO: Salva a lista atualizada no arquivo
-            gerenciador.salvarPedidos(pedidos);
-        }
-    }
-
-    /**
-     * Remove um pedido da lista e salva no arquivo.
-     */
-    public void remover(int id) {
-        if(pedidos.removeIf(pedido -> pedido.getId() == id)) {
-            // NOVO: Salva a lista atualizada no arquivo
-            gerenciador.salvarPedidos(pedidos);
-        }
     }
 }

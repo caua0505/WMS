@@ -1,5 +1,5 @@
 /*
- * Controller de Cliente (CORRIGIDO).
+ * Controller de Cliente.
  * Recebe o repositório via Injeção de Dependência.
  */
 package Controller;
@@ -10,19 +10,16 @@ import Repository.ClienteRepository;
 
 public class ClienteController {
 
-    // MUDANÇA: Apenas declara o repositório
     private ClienteRepository clienteRepository;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * O controller 'recebe' a instância do repositório criada na Main.
-     * @param clienteRepository A instância única do repositório.
+     * Construtor de Injeção de Dependência.
      */
     public ClienteController(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 
-    // O RESTO DA CLASSE NÃO MUDA
+    // --- Métodos que delegam para o Repositório ---
 
     //CREATE
     public void cadastroCliente(Cliente cliente) {

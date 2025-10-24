@@ -1,24 +1,23 @@
 /*
- * Repositório de Fornecedores (CORRIGIDO).
- * Responsável por gerenciar a lista de fornecedores.
+ * Repositório de Fornecedores.
+ * Mesma lógica do ClienteRepository.
  */
 package Repository;
 
 import Model.Fornecedor;
-import Model.GerenciadorArquivo; // Importa o gerenciador
+import Model.GerenciadorArquivo;
 import java.util.List;
 
 public class FornecedorRepository {
 
-    // MUDANÇA: A lista não é mais 'static'
-    private List<Fornecedor> fornecedores;
-
-    // NOVO: Instância do gerenciador
+    private List<Fornecedor> fornecedores; // Lista em memória
     private GerenciadorArquivo gerenciador;
 
-    // NOVO: Construtor que carrega dados do "fornecedores.txt"
+    /**
+     * Construtor.
+     * Carrega os fornecedores do "fornecedores.txt" ao iniciar.
+     */
     public FornecedorRepository() {
-        // Aponta para o GerenciadorArquivo no pacote Model
         this.gerenciador = new Model.GerenciadorArquivo();
         this.fornecedores = gerenciador.carregarFornecedores();
     }
@@ -27,16 +26,10 @@ public class FornecedorRepository {
      * Adiciona um novo fornecedor à lista e salva no arquivo.
      */
     public void adicionar(Fornecedor fornecedor) {
-        fornecedores.add(fornecedor);
-        // NOVO: Salva a lista atualizada no arquivo
-        gerenciador.salvarFornecedores(fornecedores);
-    }
+        fornecedores.add(fornecedor); // Adiciona na memória
 
-    /**
-     * Retorna la lista de todos os fornecedores cadastrados.
-     */
-    public List<Fornecedor> listar() {
-        return fornecedores;
+        // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+        gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
     }
 
     /**
@@ -46,9 +39,10 @@ public class FornecedorRepository {
         for (int i = 0; i < fornecedores.size(); i++) {
             if (fornecedores.get(i).getId() == id) {
                 fornecedorAtualizado.setId(id);
-                fornecedores.set(i, fornecedorAtualizado);
-                // NOVO: Salva a lista atualizada no arquivo
-                gerenciador.salvarFornecedores(fornecedores);
+                fornecedores.set(i, fornecedorAtualizado); // Atualiza na memória
+
+                // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+                gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
                 return;
             }
         }
@@ -58,9 +52,15 @@ public class FornecedorRepository {
      * Remove um fornecedor da lista e salva no arquivo.
      */
     public void remover(int id) {
-        if (fornecedores.removeIf(fornecedor -> fornecedor.getId() == id)) {
-            // NOVO: Salva a lista atualizada no arquivo
-            gerenciador.salvarFornecedores(fornecedores);
+        if (fornecedores.removeIf(fornecedor -> fornecedor.getId() == id)) { // Remove da memória
+            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+            gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
         }
+    }
+
+    // --- Métodos de Leitura ---
+
+    public List<Fornecedor> listar() {
+        return fornecedores;
     }
 }

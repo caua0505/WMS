@@ -1,35 +1,52 @@
 /*
- * Classe de modelo.
- * Nenhuma alteração foi necessária aqui.
- * O método 'adicionarProduto' que você adicionou
- * já estava correto.
+ * Classe de modelo (MODIFICADA).
+ *
+ * "COMMIT" (Objetivo 1):
+ * - Adicionado um novo campo 'numeroPedido' (String) para
+ * guardar um identificador aleatório (UUID).
+ * - O 'id' (int) continua sendo o identificador sequencial (1, 2, 3...).
  */
 package Model;
 
-import View.Inter; // Dependência da interface
+import View.Inter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID; // <--- COMMIT: Importado para gerar IDs únicos
 
-public class Pedido implements Inter{
-    protected int id;
+public class Pedido implements Inter {
+    protected int id; // ID sequencial (1, 2, 3...)
+    private String numeroPedido; // <--- COMMIT: Novo campo para o ID aleatório (solicitado)
     protected Date data;
     protected String status;
-    private List<Produto> produtos; // Lista de produtos no pedido
+    private List<Produto> produtos;
 
-    // Construtor usado pelo GerenciadorArquivo
+    /**
+     * Construtor usado pelo GerenciadorArquivo ao carregar do TXT.
+     */
     public Pedido(int id, Date data, String status) {
         this.id = id;
         this.data = data;
         this.status = status;
-        this.produtos = new ArrayList<>(); // Inicializa a lista
+        this.produtos = new ArrayList<>();
+        // <--- COMMIT: Garante que pedidos antigos (sem UUID) recebam um ao serem carregados
+        this.numeroPedido = UUID.randomUUID().toString().substring(0, 8);
     }
 
-    // Construtor para criar um novo pedido
-    public Pedido(){
+    /**
+     * Construtor para criar um novo pedido (usado pelo Controller).
+     */
+    public Pedido() {
+        // --- COMMIT (Objetivo 1): Geração de ID Aleatório ---
+        // Gera um número de pedido único e aleatório (ex: "a8b2c1f-")
+        // Usamos os primeiros 8 caracteres do UUID para facilitar a leitura.
+        this.numeroPedido = UUID.randomUUID().toString().substring(0, 8);
+
+        // O 'id' (int) sequencial será definido pelo PedidoRepository ao salvar.
         Random random = new Random();
-        this.id = random.nextInt(100000); // ID temporário, será sobrescrito pelo Repositório
+        this.id = random.nextInt(100000); // Valor temporário
+
         this.data = new Date(); // Data atual
         this.status = "Criado";
         this.produtos = new ArrayList<>(); // Inicializa a lista
@@ -39,48 +56,71 @@ public class Pedido implements Inter{
      * Adiciona um produto à lista interna de produtos do pedido.
      */
     public void adicionarProduto(Produto produto) {
-        this.produtos.add(produto);
-    }
-
-    // Métodos antigos de status (não mais usados pelo Controller, mas podem ficar)
-    public int criarPedido(Date data){
-        this.data = data;
-        this.status = "Criado!";
-        return this.id;
-    }
-    public void atulizarStatus(int id , String status){
-        if (this.id == id){
-            this.status = status;
-        }
-    }
-    public void cancelarPedido(int id){
-        if(this.id == id){
-            this.status = "Cancelado!";
+        if (produto != null) {
+            this.produtos.add(produto);
         }
     }
 
-    // Getters
-    public Date getData() { return data; }
-    public int getId() { return id; }
-    public String getStatus() { return status; }
-    public List<Produto> getProdutos() { return produtos; }
+    // --- GETTERS ---
+    public Date getData() {
+        return data;
+    }
 
-    // Setters (Usados pelo Repositório/Controller)
-    public void setId(int id) { this.id = id; }
-    public void setStatus(String status) { this.status = status; }
+    public int getId() {
+        return id;
+    }
 
-    // Métodos de Interface Inter
+    public String getStatus() {
+        return status;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    // --- COMMIT: Getter para o novo campo ---
+    public String getNumeroPedido() {
+        return numeroPedido;
+    }
+
+    // --- SETTERS (Usados pelo Repositório/Controller) ---
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // --- COMMIT: Setter para o novo campo (usado pelo GerenciadorArquivo) ---
+    public void setNumeroPedido(String numeroPedido) {
+        this.numeroPedido = numeroPedido;
+    }
+
+    // --- Métodos de Interface Inter (Apenas exibem no console) ---
     @Override
-    public void criar(){ System.out.println("Pedido Criado!" + this); }
+    public void criar() {
+        System.out.println("Pedido Criado!" + this);
+    }
+
     @Override
-    public void atualizar(){ System.out.println("Pedido Atualizado!" + this); }
+    public void atualizar() {
+        System.out.println("Pedido Atualizado!" + this);
+    }
+
     @Override
-    public void deletar() { System.out.println("Pedido Deletado!" + this); }
+    public void deletar() {
+        System.out.println("Pedido Deletado!" + this);
+    }
+
     @Override
-    public void listar() { System.out.println(this); }
+    public void listar() {
+        System.out.println(this);
+    }
 
     @Override
     public String toString() {
-        return "Pedido ID: " + id + "|Data: " + data + "|Status: " + status;
+        // --- COMMIT: Atualizado o toString para incluir o novo número ---
+        return "Pedido ID: " + id + " | Num: " + numeroPedido + " | Data: " + data + " | Status: " + status;
     }
 }

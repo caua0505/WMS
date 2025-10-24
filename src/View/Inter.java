@@ -1,6 +1,7 @@
 /*
  * Interface (Usada pelas classes de Modelo).
- * Nenhuma alteração foi necessária aqui.
+ * Define um "contrato" que obriga as classes
+ * a terem estes métodos.
  */
 package View;
 

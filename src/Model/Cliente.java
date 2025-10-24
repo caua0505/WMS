@@ -1,17 +1,17 @@
 /*
  * Classe de modelo.
- * Nenhuma alteração foi necessária aqui.
+ * Herda os campos 'id' e 'nome' da classe Pessoa.
  */
 package Model;
 
 import View.Inter; // Dependência da interface
 
-public class Cliente extends Pessoa implements Inter{
+public class Cliente extends Pessoa implements Inter {
     private String endereco;
 
-    // Construtor Herdando de Pessoa
-    public Cliente(int id , String endereco, String nome) {
-        super(id, nome);
+    // Construtor que chama o construtor da superclasse (Pessoa)
+    public Cliente(int id, String endereco, String nome) {
+        super(id, nome); // Passa 'id' e 'nome' para Pessoa
         this.endereco = endereco;
     }
 
@@ -20,22 +20,19 @@ public class Cliente extends Pessoa implements Inter{
         return endereco;
     }
 
-    // Metodo Interface
+    // Metodos da Interface
     @Override
     public void criar() {
         System.out.println("Criando Cliente!" + this);
     }
-
     @Override
     public void atualizar() {
         System.out.println("Atualizando Cliente!" + this);
     }
-
     @Override
     public void deletar() {
         System.out.println("Deletando Cliente!" + this);
     }
-
     @Override
     public void listar() {
         System.out.println(this);

@@ -1,6 +1,8 @@
 /*
- * View de Produto (CORRIGIDA).
- * Recebe o Controller e o Scanner via Injeção de Dependência.
+ * View de Produto.
+ *
+ * "COMMIT": Esta classe recebe o Controller e o Scanner
+ * via Injeção de Dependência (DI) no construtor.
  */
 package View;
 
@@ -11,48 +13,39 @@ import java.util.Scanner;
 
 public class ProdutoView {
 
-    // MUDANÇA: Apenas declara o controller
-    // Autor : Cauã Tobias , Natan Lima
-
+    // A View "conversa" com o Controller
     private ProdutoController produtoController;
-
-    // MUDANÇA: Apenas declara o scanner
-    // Autor : Cauã Tobias , Natan Lima
-
+    // Recebe o Scanner único da Main
     private Scanner scanner;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * Recebe o controller e o scanner único da Main.
+     * Construtor de Injeção de Dependência.
      */
-    // Autor : Cauã Tobias , Natan Lima
-
     public ProdutoView(ProdutoController produtoController, Scanner scanner) {
         this.produtoController = produtoController;
         this.scanner = scanner;
     }
 
-    //Menu de exibição do Sistema WMS
-    // Autor : Cauã Tobias , Natan Lima
-
+    /**
+     * Loop do menu de produtos.
+     */
     public void exibirMenu() {
         int opcao = -1;
         while (opcao != 0) {
-            // Este menu estava travando antes da correção do Scanner
             System.out.println("\n---===[ Gestão de Produtos ]===---");
             System.out.println("1. Cadastrar Produto");
             System.out.println("2. Listar Todos os Produtos");
             System.out.println("3. Atualizar Produto");
             System.out.println("4. Remover Produto");
-            System.out.println("------------------------------------");
             System.out.println("5. Definir Posição/Local de Produto");
             System.out.println("6. Pesquisar Produto por Código");
-            System.out.println("------------------------------------");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
 
             try {
-                // Usa o scanner compartilhado
+                // "COMMIT": Forma correta de ler números com Scanner
+                // Lê a linha inteira e converte para int.
+                // Isso evita o bug de "menu pulando" do nextInt().
                 opcao = Integer.parseInt(scanner.nextLine());
                 switch (opcao) {
                     case 1: cadastrarProduto(); break;
@@ -65,26 +58,15 @@ public class ProdutoView {
                     default: System.out.println("Opção inválida.");
                 }
             } catch (NumberFormatException e) {
+                // Captura se o usuário digitar "abc" em vez de um número
                 System.out.println("Erro: Por favor, insira um número válido.");
             }
         }
     }
 
-    // O RESTO DA CLASSE NÃO MUDA
-    // Listar Produto
-    // Autor : Cauã Tobias , Natan Lima
+    // "COMMIT": Os métodos privados da View coletam os dados do usuário
+    // e, em seguida, chamam o Controller para fazer o trabalho.
 
-    public void listarProdutos() {
-        System.out.println("\n--- Lista de Produtos ---");
-        List<Produto> produtos = produtoController.listarProdutos();
-        if (produtos.isEmpty()) {
-            System.out.println("Nenhum produto cadastrado.");
-        } else {
-            produtos.forEach(System.out::println);
-        }
-    }
-     // Produto cadastro
-     // Autor : Cauã Tobias , Natan Lima
     private void cadastrarProduto() {
         System.out.println("\n--- Cadastro de Produto ---");
         System.out.print("Nome do produto: ");
@@ -92,16 +74,23 @@ public class ProdutoView {
         System.out.print("Quantidade inicial: ");
         int quantidade = Integer.parseInt(scanner.nextLine());
 
-        //Retorno do Produto cadastrado
-        // Autor : Cauã Tobias , Natan Lima
-
+        // Chama o controller para processar os dados
         Produto produto = produtoController.cadastrarProduto(nome, quantidade);
-        System.out.println("Código do Produto: " + produto.getCodigo());
-        System.out.println("Nome do Produto: " + produto.getNome());
         System.out.println("Produto cadastrado com sucesso!");
+        System.out.println("Código gerado: " + produto.getCodigo());
     }
-      // Produto Atualizado
-      // Autor : Cauã Tobias , Natan Lima
+
+    public void listarProdutos() {
+        System.out.println("\n--- Lista de Produtos ---");
+        // Pede a lista ao controller
+        List<Produto> produtos = produtoController.listarProdutos();
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto cadastrado.");
+        } else {
+            // Imprime cada produto (usando o toString() do Produto)
+            produtos.forEach(System.out::println);
+        }
+    }
 
     private void atualizarProduto() {
         System.out.print("ID do produto a ser atualizado: ");
@@ -110,22 +99,18 @@ public class ProdutoView {
         String nome = scanner.nextLine();
         System.out.print("Nova quantidade total: ");
         int quantidade = Integer.parseInt(scanner.nextLine());
+        // Chama o controller
         produtoController.atualizarProduto(id, nome, quantidade);
         System.out.println("Produto atualizado!");
     }
 
-    // Remover Produto
-    // Autor : Cauã Tobias , Natan Lima
-
     private void removerProduto() {
         System.out.print("ID do produto a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
+        // Chama o controller
         produtoController.removerProduto(id);
         System.out.println("Produto removido!");
     }
-
-    // Definir localização no Estoque
-    // Autor : Cauã Tobias , Natan Lima
 
     private void definirLocalizacao() {
         System.out.println("\n--- Definir Localização de Produto ---");
@@ -136,8 +121,8 @@ public class ProdutoView {
         System.out.print("Digite o Local (ex: 3 para Prateleira 3): ");
         int local = Integer.parseInt(scanner.nextLine());
 
+        // Chama o controller
         boolean sucesso = produtoController.definirLocalizacao(id, posicao, local);
-
         if (sucesso) {
             System.out.println("Localização definida com sucesso!");
         } else {
@@ -145,16 +130,13 @@ public class ProdutoView {
         }
     }
 
-    //Pesquisa de Produto por codigo
-    // Autor : Cauã Tobias , Natan Lima
-
     private void pesquisarPorCodigo() {
         System.out.println("\n--- Pesquisar Produto por Código ---");
         System.out.print("Digite o Código do produto (ex: 123432): ");
         String codigo = scanner.nextLine();
 
+        // Chama o controller
         Produto produtoEncontrado = produtoController.buscarProdutoPorCodigo(codigo);
-
         if (produtoEncontrado != null) {
             System.out.println("Produto encontrado:");
             System.out.println(produtoEncontrado);

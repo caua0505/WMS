@@ -1,5 +1,5 @@
 /*
- * View de Fornecedor (CORRIGIDA).
+ * View de Fornecedor.
  * Recebe o Controller e o Scanner via Injeção de Dependência.
  */
 package View;
@@ -11,22 +11,16 @@ import java.util.Scanner;
 
 public class FornecedorView {
 
-    // MUDANÇA: Apenas declara o controller
     private FornecedorController fornecedorController;
-
-    // MUDANÇA: Apenas declara o scanner
     private Scanner scanner;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * Recebe o controller e o scanner único da Main.
+     * Construtor de Injeção de Dependência.
      */
     public FornecedorView(FornecedorController fornecedorController, Scanner scanner) {
         this.fornecedorController = fornecedorController;
         this.scanner = scanner;
     }
-
-    // O RESTO DA CLASSE NÃO MUDA
 
     public void exibirMenu() {
         int opcao = -1;
@@ -57,6 +51,8 @@ public class FornecedorView {
         }
     }
 
+    // --- Métodos privados que chamam o Controller ---
+
     private void cadastrarFornecedor() {
         System.out.println("\n--- Cadastro de Fornecedor ---");
         System.out.print("ID do fornecedor: ");
@@ -66,6 +62,7 @@ public class FornecedorView {
         System.out.print("CNPJ do fornecedor: ");
         String cnpj = scanner.nextLine();
         Fornecedor fornecedor = new Fornecedor(id, cnpj, nome);
+        // Chama o controller
         fornecedorController.cadastrarFornecedor(fornecedor);
         System.out.println("Fornecedor cadastrado com sucesso!");
     }
@@ -89,6 +86,7 @@ public class FornecedorView {
         System.out.print("Novo CNPJ: ");
         String cnpj = scanner.nextLine();
         Fornecedor fornecedor = new Fornecedor(id, cnpj, nome);
+        // Chama o controller
         fornecedorController.atualizarFornecedor(id, fornecedor);
         System.out.println("Fornecedor atualizado com sucesso!");
     }
@@ -97,6 +95,7 @@ public class FornecedorView {
         System.out.println("\n--- Remover Fornecedor ---");
         System.out.print("ID do fornecedor a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
+        // Chama o controller
         fornecedorController.removerFornecedor(id);
         System.out.println("Fornecedor removido com sucesso!");
     }

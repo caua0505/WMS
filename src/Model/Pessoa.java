@@ -1,15 +1,17 @@
 /*
  * Classe de modelo (Abstrata).
- * Nenhuma alteração foi necessária aqui.
+ * Serve como base para Cliente e Fornecedor.
+ * Não pode ser instanciada diretamente (new Pessoa()).
  */
 package Model;
 
 public abstract class Pessoa {
+    // Protected: Visível para esta classe e suas subclasses
     protected int id;
     protected String nome;
 
     //Construtor
-    public Pessoa(int id, String nome){
+    public Pessoa(int id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -23,7 +25,7 @@ public abstract class Pessoa {
         return nome;
     }
 
-    // MÉTODO NECESSÁRIO PARA ATUALIZAÇÕES
+    // Setter necessário para atualizações
     public void setId(int id) {
         this.id = id;
     }

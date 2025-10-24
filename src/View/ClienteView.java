@@ -1,5 +1,5 @@
 /*
- * View de Cliente (CORRIGIDA).
+ * View de Cliente.
  * Recebe o Controller e o Scanner via Injeção de Dependência.
  */
 package View;
@@ -11,23 +11,16 @@ import java.util.Scanner;
 
 public class ClienteView {
 
-    // MUDANÇA: Apenas declara o controller
     private ClienteController clienteController;
-
-    // MUDANÇA: Apenas declara o scanner
     private Scanner scanner;
 
     /**
-     * MUDANÇA: Construtor de Injeção de Dependência.
-     * Recebe o controller e o scanner único da Main.
+     * Construtor de Injeção de Dependência.
      */
     public ClienteView(ClienteController clienteController, Scanner scanner) {
         this.clienteController = clienteController;
         this.scanner = scanner;
     }
-
-    // O RESTO DA CLASSE NÃO MUDA
-    // (Os métodos do menu agora usam as instâncias injetadas)
 
     public void exibirMenu() {
         int opcao = -1;
@@ -60,6 +53,8 @@ public class ClienteView {
         }
     }
 
+    // --- Métodos privados que chamam o Controller ---
+
     private void cadastrarCliente() {
         System.out.println("\n--- Cadastro de Cliente ---");
         System.out.print("ID do cliente: ");
@@ -69,6 +64,7 @@ public class ClienteView {
         System.out.print("Endereço do cliente: ");
         String endereco = scanner.nextLine();
         Cliente cliente = new Cliente(id, endereco, nome);
+        // Chama o controller
         clienteController.cadastroCliente(cliente);
         System.out.println("Cliente cadastrado com sucesso!");
     }
@@ -92,6 +88,7 @@ public class ClienteView {
         System.out.print("Novo endereço: ");
         String endereco = scanner.nextLine();
         Cliente cliente = new Cliente(id, endereco, nome);
+        // Chama o controller
         clienteController.atualizarCliente(id, cliente);
         System.out.println("Cliente atualizado com sucesso!");
     }
@@ -100,6 +97,7 @@ public class ClienteView {
         System.out.println("\n--- Remover Cliente ---");
         System.out.print("ID do cliente a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
+        // Chama o controller
         clienteController.removerCliente(id);
         System.out.println("Cliente removido com sucesso!");
     }
@@ -108,6 +106,7 @@ public class ClienteView {
         System.out.println("\n--- Buscar Cliente por Nome ---");
         System.out.print("Nome do cliente a buscar: ");
         String nome = scanner.nextLine();
+        // Chama o controller
         Cliente cliente = clienteController.buscarCliente(nome);
         if (cliente != null) {
             System.out.println("Cliente encontrado: " + cliente);
