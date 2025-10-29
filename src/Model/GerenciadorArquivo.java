@@ -100,20 +100,6 @@ public class GerenciadorArquivo {
     // ========================================================================
     // MÉTODOS PARA CLIENTES
     // ========================================================================
-    public void salvarClientes(List<Cliente> clientes) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_CLIENTES))) {
-            for (Cliente cliente : clientes) {
-                // Formato: id;nome;endereco
-                String linha = cliente.getId() + DELIMITADOR +
-                        cliente.getNome() + DELIMITADOR +
-                        cliente.getEndereco();
-                writer.write(linha);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("ERRO AO SALVAR CLIENTES: " + e.getMessage());
-        }
-    }
 
     public List<Cliente> carregarClientes() {
         List<Cliente> clientes = new ArrayList<>();
@@ -123,10 +109,11 @@ public class GerenciadorArquivo {
                 String[] dados = linha.split(DELIMITADOR);
                 if (dados.length == 3) { // Espera 3 campos
                     try {
-                        int id = Integer.parseInt(dados[0]);
+                        String id = dados[0];
+                        /*int id = Integer.parseInt(dados[0]);*/
                         String nome = dados[1];
                         String endereco = dados[2];
-                        Cliente cliente = new Cliente(id, endereco, nome);
+                        Cliente cliente = new Cliente("" ,endereco, nome, "");
                         clientes.add(cliente);
                     } catch (NumberFormatException e) {
                         System.err.println("ERRO AO LER LINHA DE CLIENTE: " + linha);
@@ -142,6 +129,23 @@ public class GerenciadorArquivo {
     // ========================================================================
     // MÉTODOS PARA FORNECEDORES
     // ========================================================================
+
+    public void salvarClientes(List<Cliente> clientes) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_CLIENTES))) {
+            for (Cliente cliente : clientes) {
+                // Formato: id;nome;endereco
+                String linha = cliente.getId() + DELIMITADOR
+                        + cliente.getNome() + DELIMITADOR
+                        + cliente.getEndereco();
+                writer.write(linha);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("ERRO AO SALVAR CLIENTES: " + e.getMessage());
+            e.printStackTrace(); // adiciona para debugar erros de escrita
+        }
+    }
+
     public void salvarFornecedores(List<Fornecedor> fornecedores) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_FORNECEDORES))) {
             for (Fornecedor f : fornecedores) {
@@ -168,7 +172,7 @@ public class GerenciadorArquivo {
                         int id = Integer.parseInt(dados[0]);
                         String nome = dados[1];
                         String cnpj = dados[2];
-                        Fornecedor f = new Fornecedor(id, cnpj, nome);
+                        Fornecedor f = new Fornecedor(cnpj, nome);
                         fornecedores.add(f);
                     } catch (NumberFormatException e) {
                         System.err.println("ERRO AO LER LINHA DE FORNECEDOR: " + linha);

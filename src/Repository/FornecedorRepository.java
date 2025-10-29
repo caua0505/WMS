@@ -27,22 +27,18 @@ public class FornecedorRepository {
      */
     public void adicionar(Fornecedor fornecedor) {
         fornecedores.add(fornecedor); // Adiciona na memória
-
-        // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
         gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
     }
 
     /**
      * Atualiza um fornecedor existente na lista e salva no arquivo.
      */
-    public void atualizar(int id, Fornecedor fornecedorAtualizado) {
+    public void atualizar(String id, Fornecedor fornecedorAtualizado) {
         for (int i = 0; i < fornecedores.size(); i++) {
-            if (fornecedores.get(i).getId() == id) {
+            if (fornecedores.get(i).getId().equals(id)) { // comparação de String
                 fornecedorAtualizado.setId(id);
-                fornecedores.set(i, fornecedorAtualizado); // Atualiza na memória
-
-                // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
-                gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
+                fornecedores.set(i, fornecedorAtualizado);
+                gerenciador.salvarFornecedores(fornecedores);
                 return;
             }
         }
@@ -51,10 +47,9 @@ public class FornecedorRepository {
     /**
      * Remove um fornecedor da lista e salva no arquivo.
      */
-    public void remover(int id) {
-        if (fornecedores.removeIf(fornecedor -> fornecedor.getId() == id)) { // Remove da memória
-            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
-            gerenciador.salvarFornecedores(fornecedores); // Salva no TXT
+    public void remover(String id) {
+        if (fornecedores.removeIf(fornecedor -> fornecedor.getId().equals(id))) { // comparação de String
+            gerenciador.salvarFornecedores(fornecedores);
         }
     }
 

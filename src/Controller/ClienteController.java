@@ -16,6 +16,7 @@ public class ClienteController {
      * Construtor de Injeção de Dependência.
      */
     public ClienteController(ClienteRepository clienteRepository) {
+
         this.clienteRepository = clienteRepository;
     }
 
@@ -30,12 +31,12 @@ public class ClienteController {
         return clienteRepository.listar();
     }
     //UPDATE
-    public void atualizarCliente(int id, Cliente clienteAtualizado) {
-        clienteRepository.atulizar(id, clienteAtualizado);
+    public void atualizarCliente(String id, Cliente clienteAtualizado) {
+        clienteRepository.atualizar(id, clienteAtualizado);
     }
     //DELETE
-    public void removerCliente(int id) {
-        clienteRepository.remover(id);
+    public void removerCliente(String id) {
+        clienteRepository.remover(String.valueOf(id));
     }
     //METODO DE NEGOCIO
     public Cliente buscarCliente(String nome) {

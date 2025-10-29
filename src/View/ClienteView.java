@@ -14,9 +14,7 @@ public class ClienteView {
     private ClienteController clienteController;
     private Scanner scanner;
 
-    /**
-     * Construtor de Injeção de Dependência.
-     */
+    // Construtor (injeção de dependência)
     public ClienteView(ClienteController clienteController, Scanner scanner) {
         this.clienteController = clienteController;
         this.scanner = scanner;
@@ -24,7 +22,7 @@ public class ClienteView {
 
     public void exibirMenu() {
         int opcao = -1;
-        while(opcao != 0) {
+        while (opcao != 0) {
             System.out.println("\n---===[ Gestão de Clientes ]===---");
             System.out.println("1. Cadastrar Cliente");
             System.out.println("2. Listar Clientes");
@@ -35,39 +33,56 @@ public class ClienteView {
             System.out.print("Escolha uma opção: ");
 
             try {
-                // Usa o scanner compartilhado
                 opcao = Integer.parseInt(scanner.nextLine());
-
-                switch(opcao) {
-                    case 1: cadastrarCliente(); break;
-                    case 2: listarClientes(); break;
-                    case 3: atualizarCliente(); break;
-                    case 4: removerCliente(); break;
-                    case 5: buscarCliente(); break;
-                    case 0: break;
-                    default: System.out.println("Opção inválida.");
+                switch (opcao) {
+                    case 1 -> cadastrarCliente();
+                    case 2 -> listarClientes();
+                    case 3 -> atualizarCliente();
+                    case 4 -> removerCliente();
+                    case 5 -> buscarCliente();
+                    case 0 -> System.out.println("Retornando ao menu principal...");
+                    default -> System.out.println("⚠️ Opção inválida. Tente novamente.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Erro: Entrada inválida. Por favor, insira um número.");
+                System.out.println("❌ Entrada inválida. Digite apenas números.");
             }
         }
     }
 
-    // --- Métodos privados que chamam o Controller ---
+    //  Métodos privados (operações) //
 
     private void cadastrarCliente() {
         System.out.println("\n--- Cadastro de Cliente ---");
-        System.out.print("ID do cliente: ");
-        int id = Integer.parseInt(scanner.nextLine());
+
+        // Nome
         System.out.print("Nome do cliente: ");
         String nome = scanner.nextLine();
+
+        // CPF com validação
+        String cpf;
+        while (true) {
+            System.out.print("CPF do cliente (11 dígitos): ");
+            cpf = scanner.nextLine().replaceAll("\\D", "").trim(); // remove tudo que não for número
+            if (cpf.length() == 11) break;
+            System.out.println("❌ CPF inválido! Deve conter 11 dígitos numéricos.");
+        }
+
+        // Endereço
         System.out.print("Endereço do cliente: ");
         String endereco = scanner.nextLine();
-        Cliente cliente = new Cliente(id, endereco, nome);
-        // Chama o controller
+
+        // Telefone
+        System.out.print("Telefone do cliente: ");
+        String telefone = scanner.nextLine();
+
+        // Criação do cliente com ID automático
+        Cliente cliente = new Cliente(cpf, endereco, nome, telefone);
         clienteController.cadastroCliente(cliente);
-        System.out.println("Cliente cadastrado com sucesso!");
+
+        System.out.println("✅ Cliente cadastrado com sucesso!");
+        System.out.println("Código do cliente: " + cliente.getId());
     }
+
 
     private void listarClientes() {
         System.out.println("\n--- Lista de Clientes ---");
@@ -75,7 +90,14 @@ public class ClienteView {
         if (clientes.isEmpty()) {
             System.out.println("Nenhum cliente cadastrado.");
         } else {
-            clientes.forEach(System.out::println);
+            for (Cliente c : clientes) {
+                System.out.println("Código: " + c.getId() +
+                        " | ID: " + c.getId() +
+                        " | Nome: " + c.getNome() +
+                        " | CPF: " + c.getCpf() +
+                        " | Endereço: " + c.getEndereco() +
+                        " | Telefone: " + c.getTelefone());
+            }
         }
     }
 
@@ -85,33 +107,43 @@ public class ClienteView {
         int id = Integer.parseInt(scanner.nextLine());
         System.out.print("Novo nome: ");
         String nome = scanner.nextLine();
+        System.out.print("Novo CPF: ");
+        String cpf = scanner.nextLine();
         System.out.print("Novo endereço: ");
         String endereco = scanner.nextLine();
-        Cliente cliente = new Cliente(id, endereco, nome);
-        // Chama o controller
-        clienteController.atualizarCliente(id, cliente);
-        System.out.println("Cliente atualizado com sucesso!");
+        System.out.print("Novo telefone: ");
+        String telefone = scanner.nextLine();
+
+        Cliente clienteAtualizado = new Cliente(nome, cpf, endereco, telefone);
+        clienteController.atualizarCliente(String.valueOf(id), clienteAtualizado);
+        System.out.println("🔄 Cliente atualizado com sucesso!");
+        System.out.println("Novo código do cliente: " + clienteAtualizado.getId());
     }
 
     private void removerCliente() {
         System.out.println("\n--- Remover Cliente ---");
         System.out.print("ID do cliente a ser removido: ");
         int id = Integer.parseInt(scanner.nextLine());
-        // Chama o controller
-        clienteController.removerCliente(id);
-        System.out.println("Cliente removido com sucesso!");
+        clienteController.removerCliente(String.valueOf(id));
+        System.out.println("🗑️ Cliente removido com sucesso!");
     }
 
     private void buscarCliente() {
         System.out.println("\n--- Buscar Cliente por Nome ---");
         System.out.print("Nome do cliente a buscar: ");
         String nome = scanner.nextLine();
-        // Chama o controller
+
         Cliente cliente = clienteController.buscarCliente(nome);
         if (cliente != null) {
-            System.out.println("Cliente encontrado: " + cliente);
+            System.out.println("✅ Cliente encontrado:");
+            System.out.println("Código: " + cliente.getId());
+            System.out.println("ID: " + cliente.getId());
+            System.out.println("Nome: " + cliente.getNome());
+            System.out.println("CPF: " + cliente.getCpf());
+            System.out.println("Endereço: " + cliente.getEndereco());
+            System.out.println("Telefone: " + cliente.getTelefone());
         } else {
-            System.out.println("Cliente não encontrado.");
+            System.out.println("❌ Cliente não encontrado.");
         }
     }
 }

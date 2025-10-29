@@ -1,7 +1,3 @@
-/*
- * Repositório de Clientes.
- * Mesma lógica do ProdutoRepository.
- */
 package Repository;
 
 import Model.Cliente;
@@ -10,60 +6,54 @@ import java.util.List;
 
 public class ClienteRepository {
 
-    private List<Cliente> clientes; // Lista em memória
+    private List<Cliente> clientes;
     private GerenciadorArquivo gerenciador;
 
-    /**
-     * Construtor.
-     * Carrega os clientes do "clientes.txt" ao iniciar.
-     */
     public ClienteRepository() {
         this.gerenciador = new Model.GerenciadorArquivo();
         this.clientes = gerenciador.carregarClientes();
     }
 
-    /**
-     * Adiciona um novo cliente à lista e salva no arquivo.
-     */
+    // --- Adicionar ---
     public void adicionar(Cliente cliente) {
-        clientes.add(cliente); // Adiciona na memória
-
-        // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
-        gerenciador.salvarClientes(clientes); // Salva no TXT
+        clientes.add(cliente);
+        gerenciador.salvarClientes(clientes);
     }
 
-    /**
-     * Atualiza um cliente existente e salva no arquivo.
-     */
-    public void atulizar(int id, Cliente clienteAtualizado) {
+    // --- Atualizar ---
+    public void atualizar(String id, Cliente clienteAtualizado) {
         for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).getId() == id) {
+            if (clientes.get(i).getId().equals(id)) {
                 clienteAtualizado.setId(id);
-                clientes.set(i, clienteAtualizado); // Atualiza na memória
+                clienteAtualizado.setTelefone(clienteAtualizado.getTelefone());
+                clienteAtualizado.setCpf(clienteAtualizado.getCpf());
+                clienteAtualizado.setEndereco(clienteAtualizado.getEndereco());
+                clientes.set(i, clienteAtualizado);
 
-                // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
-                gerenciador.salvarClientes(clientes); // Salva no TXT
+                gerenciador.salvarClientes(clientes);
+                System.out.println("🔄 Cliente atualizado com sucesso!");
                 return;
             }
         }
+        System.out.println("⚠️ Cliente não encontrado para atualização.");
     }
 
-    /**
-     * Remove um cliente da lista e salva no arquivo.
-     */
-    public void remover(int id) {
-        if (clientes.removeIf(cliente -> cliente.getId() == id)) { // Remove da memória
-            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
-            gerenciador.salvarClientes(clientes); // Salva no TXT
+    // --- Remover ---
+    public void remover(String id) {
+        if (clientes.removeIf(cliente -> cliente.getId().equals(id))) {
+            gerenciador.salvarClientes(clientes);
+            System.out.println("🗑️ Cliente removido com sucesso!");
+        } else {
+            System.out.println("⚠️ Cliente não encontrado para remoção.");
         }
     }
 
-    // --- Métodos de Leitura ---
-
+    // --- Listar ---
     public List<Cliente> listar() {
         return clientes;
     }
 
+    // --- Buscar ---
     public Cliente buscarCliente(String nome) {
         for (Cliente cliente : clientes) {
             if (cliente.getNome().equalsIgnoreCase(nome)) {

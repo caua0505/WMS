@@ -10,7 +10,7 @@ import Repository.FornecedorRepository;
 
 public class FornecedorController {
 
-    private FornecedorRepository fornecedorRepository;
+    private final FornecedorRepository fornecedorRepository;
 
     /**
      * Construtor de Injeção de Dependência.
@@ -21,19 +21,32 @@ public class FornecedorController {
 
     // --- Métodos que delegam para o Repositório ---
 
+    /**
+     * Cadastra um novo fornecedor.
+     */
     public void cadastrarFornecedor(Fornecedor fornecedor) {
         fornecedorRepository.adicionar(fornecedor);
     }
 
+    /**
+     * Retorna a lista de todos os fornecedores.
+     */
     public List<Fornecedor> listarFornecedores() {
         return fornecedorRepository.listar();
     }
 
-    public void atualizarFornecedor(int id, Fornecedor fornecedorAtualizado) {
+    /**
+     * Atualiza um fornecedor existente.
+     * O ID é passado como String, pois é gerado automaticamente.
+     */
+    public void atualizarFornecedor(String id, Fornecedor fornecedorAtualizado) {
         fornecedorRepository.atualizar(id, fornecedorAtualizado);
     }
 
-    public void removerFornecedor(int id) {
+    /**
+     * Remove um fornecedor existente pelo ID.
+     */
+    public void removerFornecedor(String id) {
         fornecedorRepository.remover(id);
     }
 }
