@@ -16,9 +16,9 @@ public class Fornecedor extends Pessoa implements Inter {
 
     public Fornecedor( String cnpj, String nome) {
         super(gerarCodigoFornecedor(), nome);
-        this.cnpj = cnpj;
-        this.endereco = endereco;
-        this.telefone = (telefone != null) ? telefone : "";
+        setCnpj(cnpj);
+        this.endereco = "";
+        this.telefone = "";
     }
 
     // RANDOM GERAR CODIGO FORNECEDOR //
@@ -34,10 +34,10 @@ public class Fornecedor extends Pessoa implements Inter {
     }
 
     public void setCnpj(String cnpj) {
-        if (cnpj != null &&  !cnpj.matches("\\d{14}")) {
+        if (cnpj != null &&  cnpj.matches("\\d{14}")) {
             this.cnpj = cnpj;
         } else {
-            throw new IllegalArgumentException("CNPJ inválido1 Deve conter 14 digitos númericos");
+            throw new IllegalArgumentException("CNPJ inválido! Deve conter 14 digitos númericos");
         }
     }
 
