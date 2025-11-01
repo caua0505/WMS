@@ -1,14 +1,6 @@
 /*
+ * Autor ;Natan e Cauã
  * Classe do "banco de dados" TXT.
- *
- * "COMMIT" (Objetivo 1):
- * - Modificada para salvar e carregar o novo campo 'numeroPedido'.
- *
- * "COMMIT" (Objetivo 2):
- * - Esta classe usa a técnica "try-with-resources"
- * (ex: try (BufferedWriter writer = ...))
- * - Isso garante que o arquivo seja fechado e salvo automaticamente,
- * mesmo que um erro ocorra. Esta é a forma correta de gravar arquivos.
  */
 package Model;
 
@@ -22,7 +14,7 @@ import java.util.List;
 
 public class GerenciadorArquivo {
 
-    // Define o caractere que separa os campos no TXT
+    // Define o caractere que separa os campos no TXT //
     private static final String DELIMITADOR = ";";
 
     // Nomes de arquivos separados para cada entidade
@@ -34,19 +26,15 @@ public class GerenciadorArquivo {
     // Formato padrão para salvar e ler datas
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    // ========================================================================
-    // MÉTODOS PARA PRODUTOS
-    // ========================================================================
+    // MÉTODOS PARA PRODUTOS //
+    // Salva a LISTA completa de produtos no arquivo "produtos.txt".
+    // Este metodo SOBRESCREVE o arquivo antigo com a lista atualizada //
 
-    /**
-     * Salva a LISTA completa de produtos no arquivo "produtos.txt".
-     * Este método SOBRESCREVE o arquivo antigo com a lista atualizada.
-     */
     public void salvarProdutos(List<Produto> produtos) {
-        // "try-with-resources" garante que o 'writer' seja fechado
+        // "try-with-resources" garante que o 'writer' seja fechado //
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_PRODUTOS))) {
             for (Produto produto : produtos) {
-                // Formato: id;codigo;nome;quantidade;posicao;local
+                // Formato: id;codigo;nome;quantidade;posicao;local //
                 String linha = produto.getId() + DELIMITADOR +
                         produto.getCodigo() + DELIMITADOR +
                         produto.getNome() + DELIMITADOR +
@@ -54,16 +42,14 @@ public class GerenciadorArquivo {
                         produto.getPosicao() + DELIMITADOR +
                         produto.getLocal();
                 writer.write(linha);
-                writer.newLine(); // Pula para a próxima linha
+                writer.newLine(); // Pula para a próxima linha //
             }
         } catch (IOException e) {
             System.err.println("ERRO AO SALVAR PRODUTOS: " + e.getMessage());
         }
     }
 
-    /**
-     * Carrega os produtos do arquivo "produtos.txt" para uma Lista.
-     */
+    // METODO LISTAR PRODUTOS //
     public List<Produto> carregarProdutos() {
         List<Produto> produtos = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_PRODUTOS))) {
@@ -71,7 +57,7 @@ public class GerenciadorArquivo {
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(DELIMITADOR);
 
-                if (dados.length == 6) { // Espera 6 campos
+                if (dados.length == 6) { // Espera 6 campos //
                     try {
                         int id = Integer.parseInt(dados[0]);
                         String codigo = dados[1];
@@ -91,26 +77,23 @@ public class GerenciadorArquivo {
                 }
             }
         } catch (IOException e) {
-            // Isso é normal na primeira vez que o programa roda
+            // Isso é normal na primeira vez que o programa roda //
             System.out.println("Arquivo de produtos não encontrado. Um novo será criado.");
         }
         return produtos;
     }
 
-    // ========================================================================
-    // MÉTODOS PARA CLIENTES
-    // ========================================================================
-
+    // MÉTODOS PARA CLIENTES //
     public List<Cliente> carregarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_CLIENTES))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(DELIMITADOR);
-                if (dados.length == 3) { // Espera 3 campos
+                if (dados.length == 3) { // Espera 3 campos //
                     try {
                         String id = dados[0];
-                        /*int id = Integer.parseInt(dados[0]);*/
+                        // int id = Integer.parseInt(dados[0]) //
                         String nome = dados[1];
                         String endereco = dados[2];
                         Cliente cliente = new Cliente("" ,endereco, nome, "");
@@ -126,10 +109,7 @@ public class GerenciadorArquivo {
         return clientes;
     }
 
-    // ========================================================================
-    // MÉTODOS PARA FORNECEDORES
-    // ========================================================================
-
+    // MÉTODOS PARA FORNECEDORES //
     public void salvarClientes(List<Cliente> clientes) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_CLIENTES))) {
             for (Cliente cliente : clientes) {
@@ -142,14 +122,14 @@ public class GerenciadorArquivo {
             }
         } catch (IOException e) {
             System.err.println("ERRO AO SALVAR CLIENTES: " + e.getMessage());
-            e.printStackTrace(); // adiciona para debugar erros de escrita
+            e.printStackTrace(); // adiciona para debugar erros de escrita //
         }
     }
 
     public void salvarFornecedores(List<Fornecedor> fornecedores) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_FORNECEDORES))) {
             for (Fornecedor f : fornecedores) {
-                // Formato: id;nome;cnpj
+                // Formato: id;nome;cnpj //
                 String linha = f.getId() + DELIMITADOR +
                         f.getNome() + DELIMITADOR +
                         f.getCnpj();
@@ -161,13 +141,14 @@ public class GerenciadorArquivo {
         }
     }
 
+   // METODO LISTAR FORNECEDORES //
     public List<Fornecedor> carregarFornecedores() {
         List<Fornecedor> fornecedores = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_FORNECEDORES))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(DELIMITADOR);
-                if (dados.length == 3) { // Espera 3 campos
+                if (dados.length == 3) { // Espera 3 campos //
                     try {
                         int id = Integer.parseInt(dados[0]);
                         String nome = dados[1];
@@ -185,17 +166,12 @@ public class GerenciadorArquivo {
         return fornecedores;
     }
 
-    // ========================================================================
     // MÉTODOS PARA PEDIDOS (MODIFICADOS)
-    // ========================================================================
-
-    /**
-     * Salva a LISTA completa de pedidos no arquivo "pedidos.txt".
-     */
+    // Salva a LISTA completa de pedidos no arquivo "pedidos.txt" //
     public void salvarPedidos(List<Pedido> pedidos) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_PEDIDOS))) {
             for (Pedido pedido : pedidos) {
-                // Lógica para salvar só os IDs dos produtos (ex: "1,2,5")
+                // Lógica para salvar só os IDs dos produtos (ex: "1,2,5") //
                 List<String> idsProdutos = new ArrayList<>();
                 for (Produto p : pedido.getProdutos()) {
                     idsProdutos.add(String.valueOf(p.getId()));
@@ -203,9 +179,9 @@ public class GerenciadorArquivo {
                 String produtosString = String.join(",", idsProdutos);
 
                 // --- COMMIT (Objetivo 1): Formato de linha atualizado ---
-                // Formato: id;numeroPedido;data_formatada;status;lista_de_ids_de_produto
+                // Formato: id;numeroPedido;data_formatada;status;lista_de_ids_de_produto //
                 String linha = pedido.getId() + DELIMITADOR +
-                        pedido.getNumeroPedido() + DELIMITADOR + // <--- COMMIT: Salva o novo número
+                        pedido.getNumeroPedido() + DELIMITADOR + // COMMIT: Salva o novo número //
                         SDF.format(pedido.getData()) + DELIMITADOR +
                         pedido.getStatus() + DELIMITADOR +
                         produtosString;
@@ -217,11 +193,7 @@ public class GerenciadorArquivo {
         }
     }
 
-    /**
-     * Carrega os pedidos do arquivo "pedidos.txt".
-     * @param produtoRepo O repositório de produtos JÁ CARREGADO.
-     * (Necessário para "reconectar" os produtos aos pedidos).
-     */
+    // METODO LISTAR PRODUTOS //
     public List<Pedido> carregarPedidos(ProdutoRepository produtoRepo) {
         List<Pedido> pedidos = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_PEDIDOS))) {
@@ -229,26 +201,26 @@ public class GerenciadorArquivo {
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(DELIMITADOR);
 
-                // --- COMMIT (Objetivo 1): Verificação atualizada para 4 ou 5 campos ---
-                // Formato: id[0];numeroPedido[1];data[2];status[3];(produtos[4])
+                // COMMIT (Objetivo 1): Verificação atualizada para 4 ou 5 campos
+                // Formato: id[0];numeroPedido[1];data[2];status[3];(produtos[4]) //
                 if (dados.length >= 4) {
                     try {
                         int id = Integer.parseInt(dados[0]);
-                        String numeroPedido = dados[1]; // <--- COMMIT: Lendo o novo campo
+                        String numeroPedido = dados[1]; // COMMIT: Lendo o novo campo //
                         Date data = SDF.parse(dados[2]);
                         String status = dados[3];
 
-                        // Recria o objeto Pedido
+                        // Recria o objeto Pedido //
                         Pedido pedido = new Pedido(id, data, status);
-                        // --- COMMIT: Seta o campo extra que não está no construtor
+                        // COMMIT: Seta o campo extra que não está no construtor //
                         pedido.setNumeroPedido(numeroPedido);
 
-                        // Se o campo 5 (produtos) existir...
+                        // Se o campo 5 (produtos) existir. //
                         if (dados.length == 5 && !dados[3].isEmpty()) {
-                            String[] idsProdutos = dados[4].split(","); // Ex: ["1", "2", "5"]
+                            String[] idsProdutos = dados[4].split(","); // Ex: ["1", "2", "5"] //
                             for (String idProdutoStr : idsProdutos) {
                                 int idProduto = Integer.parseInt(idProdutoStr);
-                                // Usa o repositório para achar o objeto Produto real
+                                // Usa o repositório para achar o objeto Produto real //
                                 Produto p = produtoRepo.buscarPorId(idProduto);
                                 if (p != null) {
                                     pedido.adicionarProduto(p);

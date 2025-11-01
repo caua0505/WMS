@@ -1,6 +1,7 @@
 /*
- * View de Fornecedor.
- * Recebe o Controller e o Scanner via Injeção de Dependência.
+     * Autor: Natan e Cauã
+     * View de Fornecedor.
+     * Recebe o Controller e o Scanner via Injeção de Dependência.
  */
 package View;
 
@@ -14,14 +15,12 @@ public class FornecedorView {
     private final FornecedorController fornecedorController;
     private final Scanner scanner;
 
-    /**
-     * Construtor de Injeção de Dependência.
-     */
+    // CONSTRUTOR //
     public FornecedorView(FornecedorController fornecedorController, Scanner scanner) {
         this.fornecedorController = fornecedorController;
         this.scanner = scanner;
     }
-
+    // METODO DE EXIBIÇÃO //
     public void exibirMenu() {
         int opcao = -1;
         while (opcao != 0) {
@@ -50,8 +49,7 @@ public class FornecedorView {
         }
     }
 
-    // --- Métodos privados que chamam o Controller ---
-
+    // METODO CADASTRAR FORNECEDOR //
     private void cadastrarFornecedor() {
         System.out.println("\n--- Cadastro de Fornecedor ---");
         System.out.print("Nome do fornecedor: ");
@@ -59,13 +57,13 @@ public class FornecedorView {
         System.out.print("CNPJ do fornecedor: ");
         String cnpj = scanner.nextLine();
 
-        // O ID é gerado automaticamente dentro da classe Fornecedor
         Fornecedor fornecedor = new Fornecedor(cnpj, nome);
 
         fornecedorController.cadastrarFornecedor(fornecedor);
         System.out.println("✅ Fornecedor cadastrado com sucesso!");
     }
 
+    // METODO LISTAR FORNECEDOR //
     private void listarFornecedores() {
         System.out.println("\n--- Lista de Fornecedores ---");
         List<Fornecedor> fornecedores = fornecedorController.listarFornecedores();
@@ -76,11 +74,11 @@ public class FornecedorView {
             fornecedores.forEach(System.out::println);
         }
     }
-
+   // METODO ATUALIZAR FORNECEDOR //
     private void atualizarFornecedor() {
         System.out.println("\n--- Atualizar Fornecedor ---");
         System.out.print("ID do fornecedor a ser atualizado: ");
-        String id = scanner.nextLine(); // agora o ID é String
+        String id = scanner.nextLine(); // ID é String //
         System.out.print("Novo nome: ");
         String nome = scanner.nextLine();
         System.out.print("Novo CNPJ: ");
@@ -91,11 +89,11 @@ public class FornecedorView {
 
         System.out.println("✅ Fornecedor atualizado com sucesso!");
     }
-
+    // METODO REMOVER FORNECEDOR //
     private void removerFornecedor() {
         System.out.println("\n--- Remover Fornecedor ---");
         System.out.print("ID do fornecedor a ser removido: ");
-        String id = scanner.nextLine(); // agora o ID é String
+        String id = scanner.nextLine(); // ID é String //
 
         fornecedorController.removerFornecedor(id);
         System.out.println("🗑️ Fornecedor removido com sucesso!");

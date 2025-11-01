@@ -1,6 +1,7 @@
 /*
- * Classe de modelo.
- * Define o que é um "Produto".
+     * Autor: Natan e Cauã
+     * Classe de Produto.
+     * Define o que é um "Produto".
  */
 package Model;
 
@@ -8,23 +9,23 @@ import View.Inter;
 import java.util.Random;
 
 public class Produto implements Inter {
-    private int id; // ID sequencial (1, 2, 3...)
-    private String codigo; // Código aleatório (ex: 548796)
+    private int id; // ID sequencial //
+    private String codigo; // Código aleatório (ex: 548796) //
     private String nome;
     private int quantidade;
-    private int posicao; // Posição no armazém (ex: Corredor)
-    private int local;   // Local no armazém (ex: Prateleira)
+    private int posicao; // Posição no armazém (ex: Corredor) //
+    private int local;   // Local no armazém (ex: Prateleira) //
 
-    // Construtor principal (para novos produtos)
+    // Construtor principal (para novos produtos) //
     public Produto(String nome, int quantidade) {
-        this.codigo = gerarCodAleatorio(); // Gera um código aleatório
+        this.codigo = gerarCodAleatorio(); // Gera um código aleatório //
         this.nome = nome;
         this.quantidade = quantidade;
-        this.posicao = 0; // Padrão
-        this.local = 0;   // Padrão
+        this.posicao = 0;
+        this.local = 0;
     }
 
-    // Construtor usado pelo GerenciadorArquivo (para recriar do TXT)
+    // CONSTRUTOR usado pelo GerenciadorArquivo //
     public Produto(String codigo, String nome, int quantidade) {
         this.codigo = codigo;
         this.nome = nome;
@@ -33,14 +34,14 @@ public class Produto implements Inter {
         this.local = 0;
     }
 
-    // Gera um código numérico de 6 dígitos
+    // Gera um código numérico de 6 dígitos //
     private String gerarCodAleatorio() {
         Random aleatorio = new Random();
         int numero = 100000 + aleatorio.nextInt(900000);
         return String.valueOf(numero);
     }
 
-    // --- GETTERS ---
+    // GETTERS E SETTERS //
     public int getId() { return id; }
     public String getCodigo() { return codigo; }
     public String getNome() { return nome; }
@@ -48,14 +49,13 @@ public class Produto implements Inter {
     public int getPosicao() { return posicao; }
     public int getLocal() { return local; }
 
-    // --- SETTERS ---
     public void setId(int id) { this.id = id; } // Usado pelo Repositório
     public void setNome(String nome) { this.nome = nome; }
     public void setCodigo(String codigo) { this.codigo = codigo; }
     public void setPosicao(int posicao) { this.posicao = posicao; }
     public void setLocal(int local) { this.local = local; }
 
-    // --- Métodos de manipulação de estoque ---
+    // Métodos de manipulação de estoque //
     public void adicionarQuantidade(int qtd) {
         this.quantidade += qtd;
     }
@@ -68,7 +68,7 @@ public class Produto implements Inter {
         }
     }
 
-    // --- Métodos da interface Inter ---
+    // Métodos da interface Inter //
     @Override
     public void criar() { System.out.println("Produto criado: " + this); }
     @Override

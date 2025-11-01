@@ -1,16 +1,22 @@
+/*
+    * Autor: Natan e Cauã
+    * Classe Pessoa
+    * Herdam dessa classe Cliente e Fornecedor.
+*/
+
 package Model;
 
 public abstract class Pessoa {
-    protected String id; // Agora ID é String
+    protected String id; // Agora ID é String //
     protected String nome;
 
-    // Construtor
+    // CONSTRUTOR //
     public Pessoa(String id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    // Getters
+    // GETTERS E SETTERS //
     public String getId() {
         return id;
     }
@@ -19,7 +25,6 @@ public abstract class Pessoa {
         return nome;
     }
 
-    // Setter
     public void setId(String id) {
         this.id = id;
     }

@@ -1,1 +1,5 @@
-1;Natan Lima;Rua A
+CLI52597;Natan Lima;Rua A
+CLI69797;rua santos , 311;089879345
+CLI84567;Carlão;Rua mané , 56
+CLI64044;Marlon coxa branca;Rua alto da glória
+CLI46970;Cauã;Rua isaias regis , 3243

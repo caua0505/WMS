@@ -1,10 +1,8 @@
 /*
- * Classe de modelo.
- * OBS: Esta classe parece ser um conceito antigo do seu projeto
- * e não está sendo usada pela View/Controller/Repository
- * (o Pedido agora tem uma List<Produto>).
- * Mantive ela aqui, mas ela não está conectada ao resto do fluxo.
- */
+    * Autor: Natan e Cauã
+    * Classe Pedido item
+    * Herda de Pedido
+*/
 package Model;
 
 import Model.Pedido;
@@ -18,19 +16,19 @@ public class pedidoItem extends Pedido {
         super();
     }
 
-    // Construtor Herdando de Pedido
+    // CONSTRUTOR Herdando de Pedido //
     public pedidoItem(Date data, String status, Produto produto, int qtd) {
         super(0, data, status);
         this.produto = produto;
         this.qtd = qtd;
     }
 
-    // Adicionar Item
+    // Adicionar Item //
     public void adicionarItem() {
         System.out.println("Item adicionado: " + produto.getNome() + "Quantidade: " + qtd);
     }
 
-    // Getters e Setters
+    // GETTERS E SETTERS //
     public Produto getProduto() {
         return produto;
     }

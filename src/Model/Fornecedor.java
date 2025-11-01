@@ -1,5 +1,6 @@
 /*
- * Classe de modelo.
+ * Autor: Natan e Cauã
+ * Classe Fornecedor
  * Herda os campos 'id' e 'nome' da classe Pessoa.
  */
 package Model;
@@ -13,7 +14,6 @@ public class Fornecedor extends Pessoa implements Inter {
     private String telefone;
 
     // CONSTRUTOR //
-
     public Fornecedor( String cnpj, String nome) {
         super(gerarCodigoFornecedor(), nome);
         setCnpj(cnpj);
@@ -28,7 +28,7 @@ public class Fornecedor extends Pessoa implements Inter {
         return "FOR" + numero;
     }
 
-    // GET E SET //
+    // GETTERS E SETTERS //
     public String getCnpj() {
         return cnpj;
     }

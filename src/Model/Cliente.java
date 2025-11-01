@@ -1,3 +1,7 @@
+    /* Autor: Natan e Cauã
+    * Classe Cliente
+    * Herda os campos 'id' e 'nome' da classe Pessoa.
+    */
 package Model;
 
 import View.Inter;
