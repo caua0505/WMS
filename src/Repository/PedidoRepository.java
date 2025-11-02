@@ -63,7 +63,7 @@ public class PedidoRepository {
             int index = pedidos.indexOf(pedidoExistente);
             pedidos.set(index, pedidoAtualizado); // Atualiza na memória
 
-            // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+            // ---- "COMMIT" (Objetivo 2): A GRAVAÇÃO ----
             gerenciador.salvarPedidos(pedidos); // Salva no TXT
         }
     }
@@ -78,7 +78,7 @@ public class PedidoRepository {
         }
     }
 
-    // --- Métodos de Leitura ---
+    // ---- Métodos de Leitura ----
 
     public List<Pedido> listarTodos() {
         return pedidos;

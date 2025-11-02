@@ -19,7 +19,7 @@ public class FornecedorController {
         this.fornecedorRepository = fornecedorRepository;
     }
 
-    // --- Métodos que delegam para o Repositório ---
+    // ---- Métodos que delegam para o Repositório ----
 
     /**
      * Cadastra um novo fornecedor.

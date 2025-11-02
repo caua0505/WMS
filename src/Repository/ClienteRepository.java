@@ -14,13 +14,13 @@ public class ClienteRepository {
         this.clientes = gerenciador.carregarClientes();
     }
 
-    // --- Adicionar ---
+    // ---- Adicionar ----
     public void adicionar(Cliente cliente) {
         clientes.add(cliente);
         gerenciador.salvarClientes(clientes);
     }
 
-    // --- Atualizar ---
+    // ---- Atualizar ----
     public void atualizar(String id, Cliente clienteAtualizado) {
         for (int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getId().equals(id)) {
@@ -38,7 +38,7 @@ public class ClienteRepository {
         System.out.println("⚠️ Cliente não encontrado para atualização.");
     }
 
-    // --- Remover ---
+    // ---- Remover ----
     public void remover(String id) {
         if (clientes.removeIf(cliente -> cliente.getId().equals(id))) {
             gerenciador.salvarClientes(clientes);
@@ -48,12 +48,12 @@ public class ClienteRepository {
         }
     }
 
-    // --- Listar ---
+    // ---- Listar ----
     public List<Cliente> listar() {
         return clientes;
     }
 
-    // --- Buscar ---
+    // ---- Buscar ----
     public Cliente buscarCliente(String nome) {
         for (Cliente cliente : clientes) {
             if (cliente.getNome().equalsIgnoreCase(nome)) {

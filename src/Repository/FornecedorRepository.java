@@ -53,7 +53,7 @@ public class FornecedorRepository {
         }
     }
 
-    // --- Métodos de Leitura ---
+    // ---- Métodos de Leitura ----
 
     public List<Fornecedor> listar() {
         return fornecedores;

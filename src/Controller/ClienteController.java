@@ -20,7 +20,7 @@ public class ClienteController {
         this.clienteRepository = clienteRepository;
     }
 
-    // --- Métodos que delegam para o Repositório ---
+    // ---- Métodos que delegam para o Repositório ----
 
     //CREATE
     public void cadastroCliente(Cliente cliente) {

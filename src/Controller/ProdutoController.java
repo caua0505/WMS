@@ -24,7 +24,7 @@ public class ProdutoController {
         this.produtoRepository = produtoRepository;
     }
 
-    // --- Métodos de negócio ---
+    // ---- Métodos de negócio ----
     // A View chama estes métodos. O Controller então delega
     // o trabalho pesado para o Repositório.
 

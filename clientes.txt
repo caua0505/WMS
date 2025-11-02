@@ -1,5 +1,6 @@
-CLI52597;Natan Lima;Rua A
-CLI69797;rua santos , 311;089879345
-CLI84567;Carlão;Rua mané , 56
-CLI64044;Marlon coxa branca;Rua alto da glória
-CLI46970;Cauã;Rua isaias regis , 3243
+CLI31425;Natan Lima;Rua A
+CLI34795;rua santos , 311;089879345
+CLI37994;Carlão;Rua mané , 56
+CLI58278;Marlon coxa branca;Rua alto da glória
+CLI16920;Cauã;Rua isaias regis , 3243
+CLI78466;Teste 3;Rua teste 3

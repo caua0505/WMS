@@ -59,7 +59,7 @@ public class PedidoController {
         }
     }
 
-    // --- Métodos que delegam para o Repositório ---
+    // ---- Métodos que delegam para o Repositório ----
 
     public List<Pedido> listarPedidos() {
         return pedidoRepository.listarTodos();

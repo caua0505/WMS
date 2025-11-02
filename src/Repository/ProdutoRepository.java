@@ -59,7 +59,7 @@ public class ProdutoRepository {
             if (produtos.get(i).getId() == produto.getId()) {
                 produtos.set(i, produto); // Atualiza na lista em memória
 
-                // --- "COMMIT" (Objetivo 2): A GRAVAÇÃO ---
+                // ---- "COMMIT" (Objetivo 2): A GRAVAÇÃO ----
                 gerenciador.salvarProdutos(produtos);
                 return;
             }
@@ -77,7 +77,7 @@ public class ProdutoRepository {
         }
     }
 
-    // --- Métodos de Leitura (não precisam salvar) ---
+    // ---- Métodos de Leitura (não precisam salvar) ----
 
     public List<Produto> listarTodos() {
         return produtos; // Retorna a lista da memória
