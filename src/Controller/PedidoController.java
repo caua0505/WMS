@@ -30,10 +30,17 @@ public class PedidoController {
      * Lógica de negócio para criar um pedido.
      * Recebe uma lista de IDs de produtos (ex: [1, 5, 2]).
      */
-    public void criarPedido(List<Integer> idProdutos) {
+    public void criarPedido(List<?> idProdutos) {
         Pedido pedido = new Pedido(); // Cria um pedido novo (com UUID aleatório)
 
-        for (int id : idProdutos) {
+        for (Object idObj : idProdutos) {
+            int id;
+            if (idObj instanceof String) {
+                id = Integer.parseInt((String) idObj);
+            } else {
+                id = (int) idObj;
+            }
+
             Produto produto = produtoRepository.buscarPorId(id); // Busca no repo de produtos
             if (produto != null) {
                 // Lógica de negócio: Verifica se há estoque

@@ -1,6 +1,6 @@
 /* Autor: Natan e Cauã
-* Classe Pedido
-*  */
+ * Classe Pedido
+ *  */
 package Model;
 
 import View.Inter;
@@ -27,7 +27,7 @@ public class Pedido implements Inter {
         this.numeroPedido = UUID.randomUUID().toString().substring(0, 8);
     }
 
-     // Construtor usado pelo GerenciadorArquivo ao carregar do TXT. //
+    // Construtor usado pelo GerenciadorArquivo ao carregar do TXT. //
     public Pedido() {
         //  Geração de ID Aleatório
         // Gera um número de pedido único e aleatório (ex: "a8b2c1f-")
@@ -35,15 +35,15 @@ public class Pedido implements Inter {
         this.numeroPedido = UUID.randomUUID().toString().substring(0, 8);
 
         // O 'id' (int) sequencial será definido pelo PedidoRepository ao salvar.
-        Random random = new Random();
-        this.id = random.nextInt(100000); // Valor temporário //
+        // ❌ Removido o Random que gerava conflito de ID
+        this.id = 0; // Valor temporário até o Repository definir o ID real //
 
         this.data = new Date(); // Data atual
         this.status = "Criado";
         this.produtos = new ArrayList<>(); // Inicializa a lista //
     }
 
-   // Adiciona um produto à lista interna de produtos do pedido.//
+    // Adiciona um produto à lista interna de produtos do pedido.//
     public void adicionarProduto(Produto produto) {
         if (produto != null) {
             this.produtos.add(produto);

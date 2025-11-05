@@ -93,7 +93,6 @@ public class GerenciadorArquivo {
                 if (dados.length == 3) { // Espera 3 campos //
                     try {
                         String id = dados[0];
-                        // int id = Integer.parseInt(dados[0]) //
                         String nome = dados[1];
                         String endereco = dados[2];
                         Cliente cliente = new Cliente("" ,endereco, nome, "");
@@ -141,7 +140,7 @@ public class GerenciadorArquivo {
         }
     }
 
-   // METODO LISTAR FORNECEDORES //
+    // METODO LISTAR FORNECEDORES //
     public List<Fornecedor> carregarFornecedores() {
         List<Fornecedor> fornecedores = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_FORNECEDORES))) {
@@ -150,10 +149,11 @@ public class GerenciadorArquivo {
                 String[] dados = linha.split(DELIMITADOR);
                 if (dados.length == 3) { // Espera 3 campos //
                     try {
-                        int id = Integer.parseInt(dados[0]);
+                        String id = dados[0]; // <<< corrigido: era int
                         String nome = dados[1];
                         String cnpj = dados[2];
                         Fornecedor f = new Fornecedor(cnpj, nome);
+                        f.setId(id); // <<< garante que mantém o mesmo ID
                         fornecedores.add(f);
                     } catch (NumberFormatException e) {
                         System.err.println("ERRO AO LER LINHA DE FORNECEDOR: " + linha);
@@ -171,17 +171,14 @@ public class GerenciadorArquivo {
     public void salvarPedidos(List<Pedido> pedidos) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_PEDIDOS))) {
             for (Pedido pedido : pedidos) {
-                // Lógica para salvar só os IDs dos produtos (ex: "1,2,5") //
                 List<String> idsProdutos = new ArrayList<>();
                 for (Produto p : pedido.getProdutos()) {
                     idsProdutos.add(String.valueOf(p.getId()));
                 }
                 String produtosString = String.join(",", idsProdutos);
 
-                // --- COMMIT (Objetivo 1): Formato de linha atualizado ---
-                // Formato: id;numeroPedido;data_formatada;status;lista_de_ids_de_produto //
                 String linha = pedido.getId() + DELIMITADOR +
-                        pedido.getNumeroPedido() + DELIMITADOR + // COMMIT: Salva o novo número //
+                        pedido.getNumeroPedido() + DELIMITADOR +
                         SDF.format(pedido.getData()) + DELIMITADOR +
                         pedido.getStatus() + DELIMITADOR +
                         produtosString;
@@ -200,27 +197,19 @@ public class GerenciadorArquivo {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(DELIMITADOR);
-
-                // COMMIT (Objetivo 1): Verificação atualizada para 4 ou 5 campos
-                // Formato: id[0];numeroPedido[1];data[2];status[3];(produtos[4]) //
                 if (dados.length >= 4) {
                     try {
                         int id = Integer.parseInt(dados[0]);
-                        String numeroPedido = dados[1]; // COMMIT: Lendo o novo campo //
+                        String numeroPedido = dados[1];
                         Date data = SDF.parse(dados[2]);
                         String status = dados[3];
-
-                        // Recria o objeto Pedido //
                         Pedido pedido = new Pedido(id, data, status);
-                        // COMMIT: Seta o campo extra que não está no construtor //
                         pedido.setNumeroPedido(numeroPedido);
 
-                        // Se o campo 5 (produtos) existir. //
                         if (dados.length == 5 && !dados[3].isEmpty()) {
-                            String[] idsProdutos = dados[4].split(","); // Ex: ["1", "2", "5"] //
+                            String[] idsProdutos = dados[4].split(",");
                             for (String idProdutoStr : idsProdutos) {
                                 int idProduto = Integer.parseInt(idProdutoStr);
-                                // Usa o repositório para achar o objeto Produto real //
                                 Produto p = produtoRepo.buscarPorId(idProduto);
                                 if (p != null) {
                                     pedido.adicionarProduto(p);
